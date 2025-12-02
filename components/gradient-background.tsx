@@ -43,15 +43,15 @@ export function GradientBackground() {
         if (isDark) {
             // Dark mode: lighter at center, darker at edges
             // Center: slightly lighter than bg
-            centerColor = `oklch(0.25 ${chroma} ${brandHue})`
+            centerColor = `oklch(0.36 ${chroma} ${brandHue})`
             // Outer: darker than bg
-            outerColor = `oklch(0.10 ${chroma} ${brandHue})`
+            outerColor = `oklch(0.00 ${chroma} ${brandHue})`
         } else {
             // Light mode: lighter at center, darker at edges
             // Center: white-ish
-            centerColor = `oklch(0.98 ${chroma * 0.2} ${brandHue})`
+            centerColor = `oklch(1 ${chroma * 0.2} ${brandHue})`
             // Outer: slightly darker
-            outerColor = `oklch(0.92 ${chroma * 0.5} ${brandHue})`
+            outerColor = `oklch(0.64 ${chroma * 0.5} ${brandHue})`
         }
 
         return {

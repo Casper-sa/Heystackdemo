@@ -65,20 +65,22 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
             onMouseUp={onMouseUp}
             onTouchEnd={onTouchEnd}
             className={`
-        bg-card 
+        bg-card/60
+        backdrop-blur-xl
         rounded-[var(--radius)] 
-        border border-border 
-        shadow-lg 
+        border border-border/50
+        shadow-sm
         overflow-hidden 
         flex flex-col
-        hover:border-primary
-        transition-colors
-        duration-200
+        hover:border-primary/50
+        hover:shadow-[0_0_20px_-5px_oklch(var(--primary)/0.3)]
+        transition-all
+        duration-300
         ${className || ''}
       `}
             {...props}
         >
-            <div className="drag-handle relative p-3 border-b border-border flex items-center cursor-grab active:cursor-grabbing bg-background/50">
+            <div className="drag-handle relative p-3 border-b border-border/10 flex items-center cursor-grab active:cursor-grabbing bg-muted/20">
                 <div className="w-full flex items-center" style={{ justifyContent: 'var(--widget-title-justify)' }}>
                     <h3 className="font-bold text-sm text-foreground select-none">{title}</h3>
                 </div>
