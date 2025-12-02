@@ -1,0 +1,120 @@
+import Link from "next/link"
+import { Bell, Plus } from "lucide-react"
+
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { NotificationsDropdown } from "@/components/notifications-dropdown"
+import { ColorWheel } from "@/components/color-wheel"
+import { BackgroundColorWheel } from "@/components/background-color-wheel"
+import { AccentButtonColorWheel } from "@/components/accent-button-color-wheel"
+import { NavBarColorWheel } from "@/components/nav-bar-color-wheel"
+import { CardColorWheel } from "@/components/card-color-wheel"
+import { TextColorWheel } from "@/components/text-color-wheel"
+import { NavBarWrapper } from "@/components/nav-bar-wrapper"
+import { GradientBackground } from "@/components/gradient-background"
+import { GradientOriginPicker } from "@/components/gradient-origin-picker"
+
+
+export default function PlatformLayout({
+    children,
+}: {
+    children: React.ReactNode
+}) {
+    return (
+        <div className="min-h-screen flex flex-col relative">
+            <GradientBackground />
+            {/* Top Navbar */}
+            <NavBarWrapper className="sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-opacity-95">
+                <div className="container flex h-14 items-center mx-auto px-4">
+                    <div className="mr-4 hidden md:flex">
+                        <Link href="/" className="mr-6 flex items-center space-x-2">
+                            <span className="hidden font-bold sm:inline-block">
+                                HeyStack
+                            </span>
+                        </Link>
+                        <nav className="flex items-center space-x-6 text-sm font-medium">
+                            <Link
+                                href="/dashboard"
+                                className="transition-colors hover:text-foreground/80 text-foreground"
+                            >
+                                Dashboard
+                            </Link>
+                            <Link
+                                href="/browse"
+                                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                            >
+                                Browse Projects
+                            </Link>
+                            <Link
+                                href="/talent"
+                                className="transition-colors hover:text-foreground/80 text-foreground/60"
+                            >
+                                Browse Talent
+                            </Link>
+                        </nav>
+                    </div>
+                    <div className="flex-1 flex justify-center gap-3 items-center">
+                        <ColorWheel />
+                        <BackgroundColorWheel />
+                        <AccentButtonColorWheel />
+                        <NavBarColorWheel />
+                        <CardColorWheel />
+                        <TextColorWheel />
+                        <GradientOriginPicker />
+                    </div>
+                    <nav className="flex items-center space-x-2">
+                        <Button size="sm" className="hidden sm:flex">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Create Project
+                        </Button>
+                        <NotificationsDropdown />
+                        <ThemeToggle />
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                                    <Avatar className="h-8 w-8">
+                                        <AvatarImage src="/avatars/01.png" alt="@user" />
+                                        <AvatarFallback>SC</AvatarFallback>
+                                    </Avatar>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="w-56" align="end" forceMount>
+                                <DropdownMenuLabel className="font-normal">
+                                    <div className="flex flex-col space-y-1">
+                                        <p className="text-sm font-medium leading-none">Student Name</p>
+                                        <p className="text-xs leading-none text-muted-foreground">
+                                            student@example.com
+                                        </p>
+                                    </div>
+                                </DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    Profile
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    Settings
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem>
+                                    Log out
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </nav>
+                </div>
+            </NavBarWrapper>
+            <main className="flex-1">
+                {children}
+            </main>
+        </div>
+    )
+}
