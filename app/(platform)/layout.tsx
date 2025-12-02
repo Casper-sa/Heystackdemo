@@ -13,12 +13,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationsDropdown } from "@/components/notifications-dropdown"
-import { ColorWheel } from "@/components/color-wheel"
-import { BackgroundColorWheel } from "@/components/background-color-wheel"
-import { AccentButtonColorWheel } from "@/components/accent-button-color-wheel"
-import { NavBarColorWheel } from "@/components/nav-bar-color-wheel"
-import { CardColorWheel } from "@/components/card-color-wheel"
-import { TextColorWheel } from "@/components/text-color-wheel"
+import { ThemeGenerator } from "@/components/theme-generator"
 import { NavBarWrapper } from "@/components/nav-bar-wrapper"
 import { GradientBackground } from "@/components/gradient-background"
 import { GradientOriginPicker } from "@/components/gradient-origin-picker"
@@ -63,12 +58,7 @@ export default function PlatformLayout({
                         </nav>
                     </div>
                     <div className="flex-1 flex justify-center gap-3 items-center">
-                        <ColorWheel />
-                        <BackgroundColorWheel />
-                        <AccentButtonColorWheel />
-                        <NavBarColorWheel />
-                        <CardColorWheel />
-                        <TextColorWheel />
+                        <ThemeGenerator />
                         <GradientOriginPicker />
                     </div>
                     <nav className="flex items-center space-x-2">

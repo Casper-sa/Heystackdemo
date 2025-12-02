@@ -4,19 +4,20 @@ import * as React from "react"
 import { useColorScheme } from "./color-scheme-provider"
 
 export function GradientBackground() {
-    const { backgroundHue, backgroundVibrancy, gradientOriginX, gradientOriginY, gradientSize } = useColorScheme()
+    const { brandHue, vibrancy, gradientOriginX, gradientOriginY, gradientSize } = useColorScheme()
     const [mounted, setMounted] = React.useState(false)
     const [isDark, setIsDark] = React.useState(false)
 
     React.useEffect(() => {
         setMounted(true)
-        setIsDark(document.documentElement.classList.contains('dark'))
+        const checkDarkMode = () => setIsDark(document.documentElement.classList.contains('dark'))
+        checkDarkMode()
 
         // Listen for theme changes
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.attributeName === 'class') {
-                    setIsDark(document.documentElement.classList.contains('dark'))
+                    checkDarkMode()
                 }
             })
         })
@@ -36,29 +37,28 @@ export function GradientBackground() {
         let centerColor: string
         let outerColor: string
 
+        // Base chroma from vibrancy
+        const chroma = vibrancy * 0.3
+
         if (isDark) {
             // Dark mode: lighter at center, darker at edges
-            // Center: much lighter than base dark background
-            centerColor = `oklch(0.24 ${backgroundVibrancy} ${backgroundHue})`
-            // Originally the value was 0.25
-            // Outer: much darker than base dark background
-            outerColor = `oklch(0.00 ${backgroundVibrancy} ${backgroundHue})`
-            // Originally the value was 0.08
+            // Center: slightly lighter than bg
+            centerColor = `oklch(0.25 ${chroma} ${brandHue})`
+            // Outer: darker than bg
+            outerColor = `oklch(0.10 ${chroma} ${brandHue})`
         } else {
             // Light mode: lighter at center, darker at edges
-            // Center: very light
-            centerColor = `oklch(1.0 ${backgroundVibrancy} ${backgroundHue})`
-            // Originally the value was 1.0 (still is)
-            // Outer: noticeably darker
-            outerColor = `oklch(0.76 ${backgroundVibrancy} ${backgroundHue})`
-            // Originally the value was 0.88
+            // Center: white-ish
+            centerColor = `oklch(0.98 ${chroma * 0.2} ${brandHue})`
+            // Outer: slightly darker
+            outerColor = `oklch(0.92 ${chroma * 0.5} ${brandHue})`
         }
 
         return {
             background: `radial-gradient(circle at ${gradientOriginX}% ${gradientOriginY}%, ${centerColor} 0%, ${centerColor} ${gradientSize}%, ${outerColor} 100%)`,
             minHeight: '100vh',
         }
-    }, [mounted, isDark, backgroundHue, backgroundVibrancy, gradientOriginX, gradientOriginY, gradientSize])
+    }, [mounted, isDark, brandHue, vibrancy, gradientOriginX, gradientOriginY, gradientSize])
 
     if (!mounted) {
         return null

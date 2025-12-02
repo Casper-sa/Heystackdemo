@@ -1,23 +1,26 @@
 "use client"
 
 import * as React from "react"
-import { useColorScheme } from "./color-scheme-provider"
+
 
 export function NavBarWrapper({ children, className }: { children: React.ReactNode, className?: string }) {
-    const { navBarHue, navBarVibrancy } = useColorScheme()
     const [mounted, setMounted] = React.useState(false)
     const [isDark, setIsDark] = React.useState(false)
 
     React.useEffect(() => {
         setMounted(true)
         // Check initial dark mode state
-        setIsDark(document.documentElement.classList.contains('dark'))
-        
+        const checkDarkMode = () => {
+            setIsDark(document.documentElement.classList.contains('dark'))
+        }
+
+        checkDarkMode()
+
         // Listen for theme changes
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 if (mutation.attributeName === 'class') {
-                    setIsDark(document.documentElement.classList.contains('dark'))
+                    checkDarkMode()
                 }
             })
         })
@@ -30,20 +33,15 @@ export function NavBarWrapper({ children, className }: { children: React.ReactNo
         return () => observer.disconnect()
     }, [])
 
-    // Calculate nav bar color based on theme
-    const navBarColor = React.useMemo(() => {
-        if (!mounted) return undefined
-        if (isDark) {
-            return `oklch(0.205 ${navBarVibrancy} ${navBarHue})`
-        } else {
-            return `oklch(1 ${navBarVibrancy} ${navBarHue})`
-        }
-    }, [mounted, isDark, navBarHue, navBarVibrancy])
+    // Prevent hydration mismatch by not rendering style on server
+    const style = mounted ? {
+        backgroundColor: isDark ? 'var(--nav-bar-dark)' : 'var(--nav-bar-light)'
+    } : undefined
 
     return (
-        <header 
+        <header
             className={className}
-            style={navBarColor ? { backgroundColor: navBarColor } : undefined}
+            style={style}
         >
             {children}
         </header>
