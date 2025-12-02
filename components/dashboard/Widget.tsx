@@ -2,6 +2,7 @@
 
 import React, { forwardRef } from 'react';
 import { GripHorizontal } from 'lucide-react';
+import { cn } from "@/lib/utils";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -57,6 +58,9 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
         }
     };
 
+    // Check if dragging (opacity is reduced when dragging)
+    const isDragging = style?.opacity && Number(style.opacity) < 1;
+
     return (
         <div
             ref={ref}
@@ -64,20 +68,17 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
             onTouchEnd={onTouchEnd}
-            className={`
-        bg-card/60
-        backdrop-blur-xl
-        rounded-[var(--radius)] 
-        border border-border/50
-        shadow-sm
-        overflow-hidden 
-        flex flex-col
-        hover:border-primary/50
-        hover:shadow-[0_0_20px_-5px_oklch(var(--primary)/0.3)]
-        transition-all
-        duration-300
-        ${className || ''}
-      `}
+            className={cn(
+                "h-full flex flex-col relative overflow-hidden transition-all duration-300 rounded-xl",
+                // Light Mode (Cloud Vibe)
+                "bg-white/40 backdrop-blur-xl border border-white/20 shadow-sm hover:shadow-md hover:bg-white/50",
+                // Dark Mode (Space Vibe)
+                "dark:bg-slate-900/20 dark:backdrop-blur-md dark:border-white/10 dark:hover:bg-slate-900/30 dark:hover:border-white/20",
+                // Brand glow
+                "hover:border-primary/30",
+                isDragging ? "opacity-50 scale-95 ring-2 ring-primary" : "",
+                className
+            )}
             {...props}
         >
             <div className="drag-handle relative p-3 border-b border-border/10 flex items-center cursor-grab active:cursor-grabbing bg-muted/20">

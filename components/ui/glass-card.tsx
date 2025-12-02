@@ -1,18 +1,29 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { Card } from "@/components/ui/card"
 
-function GlassCard({ className, ...props }: React.ComponentProps<"div">) {
+interface GlassCardProps extends React.ComponentProps<typeof Card> {
+    children: React.ReactNode
+    className?: string
+}
+
+export function GlassCard({ children, className, ...props }: GlassCardProps) {
     return (
-        <div
-            data-slot="card"
+        <Card
             className={cn(
-                "bg-card/60 backdrop-blur-xl text-card-foreground flex flex-col gap-6 rounded-xl border border-border/50 py-6 shadow-sm hover:border-primary/50 hover:shadow-[0_0_20px_-5px_oklch(var(--primary)/0.3)] transition-all duration-300",
+                "relative overflow-hidden transition-all duration-300",
+                // Light Mode (Cloud Vibe): Whiter, softer, stronger blur
+                "bg-white/40 backdrop-blur-xl border-white/20 shadow-sm hover:shadow-md hover:bg-white/50",
+                // Dark Mode (Space Vibe): Darker, more transparent, lighter blur to see stars
+                "dark:bg-slate-900/20 dark:backdrop-blur-md dark:border-white/10 dark:hover:bg-slate-900/30 dark:hover:border-white/20",
+                // Brand glow on hover (subtle)
+                "hover:border-primary/30",
                 className
             )}
             {...props}
-        />
+        >
+            {children}
+        </Card>
     )
 }
-
-export { GlassCard }
