@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
@@ -18,10 +18,14 @@ import ApplicationsWidget from './widgets/ApplicationsWidget';
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const Dashboard = () => {
-    const [events, setEvents] = useState<CalendarEvent[]>([
-        { id: '1', title: 'Project Review', date: new Date(new Date().setHours(new Date().getHours() + 2)) },
-        { id: '2', title: 'Team Lunch', date: new Date(new Date().setDate(new Date().getDate() + 1)) },
-    ]);
+    const [events, setEvents] = useState<CalendarEvent[]>([]);
+
+    useEffect(() => {
+        setEvents([
+            { id: '1', title: 'Project Review', date: new Date(new Date().setHours(new Date().getHours() + 2)) },
+            { id: '2', title: 'Team Lunch', date: new Date(new Date().setDate(new Date().getDate() + 1)) },
+        ]);
+    }, []);
 
     const [layouts, setLayouts] = useState({
         lg: [

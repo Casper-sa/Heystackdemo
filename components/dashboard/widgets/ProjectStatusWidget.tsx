@@ -47,7 +47,7 @@ const ProjectStatusWidget = () => {
     };
 
     return (
-        <div className="h-full flex flex-col gap-2 p-1 overflow-auto">
+        <div className="h-full flex flex-col gap-2 p-1 overflow-auto custom-scrollbar">
             {projects.map(project => (
                 <div
                     key={project.id}

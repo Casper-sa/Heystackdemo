@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 
 const HeystackProjectsWidget = () => {
     return (
-        <div className="flex flex-col gap-4 h-full overflow-auto p-1">
+        <div className="flex flex-col gap-4 h-full overflow-auto p-1 custom-scrollbar">
             {/* Project 1 */}
             <Card className="flex flex-col shadow-none border bg-background/50">
                 <CardHeader className="p-4 pb-2">

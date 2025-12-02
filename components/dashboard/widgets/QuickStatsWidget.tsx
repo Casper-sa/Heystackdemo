@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const QuickStatsWidget = () => {
     return (
-        <div className="grid gap-4 grid-cols-1 h-full overflow-auto p-1">
+        <div className="grid gap-4 grid-cols-1 h-full overflow-auto p-1 custom-scrollbar">
             <Card className="shadow-none border-0 bg-background/50">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 p-4">
                     <CardTitle className="text-sm font-medium">Active Projects</CardTitle>

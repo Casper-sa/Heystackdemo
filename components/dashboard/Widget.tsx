@@ -37,7 +37,7 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({ children, style, class
                     <GripHorizontal size={16} />
                 </div>
             </div>
-            <div className="flex-1 p-4 overflow-auto">
+            <div className="flex-1 p-4 overflow-auto custom-scrollbar">
                 {children}
             </div>
         </div>

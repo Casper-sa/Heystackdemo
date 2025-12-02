@@ -10,15 +10,18 @@ interface TodoListWidgetProps {
 }
 
 const TodoListWidget: React.FC<TodoListWidgetProps> = ({ events = [] }) => {
-    const [now, setNow] = useState(new Date());
+    const [now, setNow] = useState<Date | null>(null);
 
     // Update 'now' every minute to refresh countdowns
     useEffect(() => {
+        setNow(new Date());
         const timer = setInterval(() => {
             setNow(new Date());
         }, 60000);
         return () => clearInterval(timer);
     }, []);
+
+    if (!now) return null;
 
     // Filter future events and sort by date
     const upcomingEvents = events
