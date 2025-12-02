@@ -11,7 +11,7 @@ export function GradientBackground() {
     React.useEffect(() => {
         setMounted(true)
         setIsDark(document.documentElement.classList.contains('dark'))
-        
+
         // Listen for theme changes
         const observer = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
@@ -39,15 +39,19 @@ export function GradientBackground() {
         if (isDark) {
             // Dark mode: lighter at center, darker at edges
             // Center: much lighter than base dark background
-            centerColor = `oklch(0.25 ${backgroundVibrancy} ${backgroundHue})`
+            centerColor = `oklch(0.24 ${backgroundVibrancy} ${backgroundHue})`
+            // Originally the value was 0.25
             // Outer: much darker than base dark background
-            outerColor = `oklch(0.08 ${backgroundVibrancy} ${backgroundHue})`
+            outerColor = `oklch(0.00 ${backgroundVibrancy} ${backgroundHue})`
+            // Originally the value was 0.08
         } else {
             // Light mode: lighter at center, darker at edges
             // Center: very light
             centerColor = `oklch(1.0 ${backgroundVibrancy} ${backgroundHue})`
+            // Originally the value was 1.0 (still is)
             // Outer: noticeably darker
-            outerColor = `oklch(0.88 ${backgroundVibrancy} ${backgroundHue})`
+            outerColor = `oklch(0.76 ${backgroundVibrancy} ${backgroundHue})`
+            // Originally the value was 0.88
         }
 
         return {
@@ -61,8 +65,8 @@ export function GradientBackground() {
     }
 
     return (
-        <div 
-            style={gradientStyle} 
+        <div
+            style={gradientStyle}
             className="fixed inset-0 -z-10 pointer-events-none w-full h-full"
         />
     )
