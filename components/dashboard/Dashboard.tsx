@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Responsive, WidthProvider } from 'react-grid-layout';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
-import Widget from './Widget';
+import Widget, { WidgetSettings, DEFAULT_WIDGET_SETTINGS } from './Widget';
 import CalendarWidget, { CalendarEvent } from './widgets/CalendarWidget';
 import TodoListWidget from './widgets/TodoListWidget';
 import WeatherWidget from './widgets/WeatherWidget';
@@ -22,6 +22,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const STORAGE_KEY = 'heystack-dashboard-layout';
 const EVENTS_STORAGE_KEY = 'heystack-dashboard-events';
+const SETTINGS_STORAGE_KEY = 'heystack-dashboard-settings';
 
 const DEFAULT_LAYOUTS = {
     lg: [
@@ -46,6 +47,7 @@ const Dashboard = () => {
     const [events, setEvents] = useState<CalendarEvent[]>([]);
     const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [widgetSettings, setWidgetSettings] = useState<Record<string, WidgetSettings>>({});
 
     useEffect(() => {
         // Load events from LocalStorage
@@ -76,6 +78,17 @@ const Dashboard = () => {
                 console.error("Failed to parse saved layout", e);
             }
         }
+
+        // Load settings from LocalStorage
+        const savedSettings = localStorage.getItem(SETTINGS_STORAGE_KEY);
+        if (savedSettings) {
+            try {
+                setWidgetSettings(JSON.parse(savedSettings));
+            } catch (e) {
+                console.error("Failed to parse saved settings", e);
+            }
+        }
+
         setIsLoaded(true);
     }, []);
 
@@ -102,6 +115,19 @@ const Dashboard = () => {
         });
     };
 
+    const handleSettingsChange = (widgetId: string, newSettings: WidgetSettings) => {
+        setWidgetSettings(prev => {
+            const updated = { ...prev, [widgetId]: newSettings };
+            localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    const getWidgetProps = (id: string) => ({
+        settings: widgetSettings[id] || DEFAULT_WIDGET_SETTINGS,
+        onSettingsChange: (s: WidgetSettings) => handleSettingsChange(id, s),
+    });
+
     return (
         <div className="w-full min-h-screen pb-20">
             <div className="flex justify-end mb-4 px-2">
@@ -126,36 +152,36 @@ const Dashboard = () => {
                 onLayoutChange={onLayoutChange}
             >
                 {/* Heystack Widgets */}
-                <Widget key="stats" title="Quick Stats">
+                <Widget key="stats" title="Quick Stats" {...getWidgetProps('stats')}>
                     <QuickStatsWidget />
                 </Widget>
-                <Widget key="heystack_projects" title="My Projects">
+                <Widget key="heystack_projects" title="My Projects" {...getWidgetProps('heystack_projects')}>
                     <HeystackProjectsWidget />
                 </Widget>
-                <Widget key="applications" title="Applications">
+                <Widget key="applications" title="Applications" {...getWidgetProps('applications')}>
                     <ApplicationsWidget />
                 </Widget>
 
                 {/* Original Widgets */}
-                <Widget key="weather" title="Weather">
+                <Widget key="weather" title="Weather" {...getWidgetProps('weather')}>
                     <WeatherWidget />
                 </Widget>
-                <Widget key="music" title="Music Player">
+                <Widget key="music" title="Music Player" {...getWidgetProps('music')}>
                     <MusicPlayerWidget />
                 </Widget>
-                <Widget key="projects" title="Project Status">
+                <Widget key="projects" title="Project Status" {...getWidgetProps('projects')}>
                     <ProjectStatusWidget />
                 </Widget>
 
-                <Widget key="calendar" title="Calendar">
+                <Widget key="calendar" title="Calendar" {...getWidgetProps('calendar')}>
                     <CalendarWidget events={events} onAddEvent={handleAddEvent} />
                 </Widget>
 
-                <Widget key="todo" title="Upcoming Events">
+                <Widget key="todo" title="Upcoming Events" {...getWidgetProps('todo')}>
                     <TodoListWidget events={events} />
                 </Widget>
 
-                <Widget key="welcome" title="Welcome">
+                <Widget key="welcome" title="Welcome" {...getWidgetProps('welcome')}>
                     <div className="flex items-center justify-between h-full">
                         <div>
                             <h2 className="text-xl font-bold text-foreground">Welcome back, Casper!</h2>
