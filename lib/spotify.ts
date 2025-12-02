@@ -1,7 +1,8 @@
 // Spotify Configuration
 // REPLACE WITH YOUR CLIENT ID
+// export const redirectUri = "http://localhost:3000/dashboard";
 export const clientId = "756662f6e2e74c9c98d2be745392c25c";
-export const redirectUri = "http://localhost:3000/dashboard";
+export const redirectUri = "http://127.0.0.1:3000/dashboard";
 
 // PKCE Helper Functions
 function generateRandomString(length: number): string {
