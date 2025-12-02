@@ -14,8 +14,10 @@ import ProjectStatusWidget from './widgets/ProjectStatusWidget';
 import QuickStatsWidget from './widgets/QuickStatsWidget';
 import HeystackProjectsWidget from './widgets/HeystackProjectsWidget';
 import ApplicationsWidget from './widgets/ApplicationsWidget';
+import WelcomeWidget from './widgets/WelcomeWidget';
 
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { RotateCcw } from "lucide-react";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
@@ -23,6 +25,8 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 const STORAGE_KEY = 'heystack-dashboard-layout';
 const EVENTS_STORAGE_KEY = 'heystack-dashboard-events';
 const SETTINGS_STORAGE_KEY = 'heystack-dashboard-settings';
+const USER_STORAGE_KEY = 'heystack-dashboard-user';
+const WEATHER_STORAGE_KEY = 'heystack-dashboard-weather';
 
 const DEFAULT_LAYOUTS = {
     lg: [
@@ -48,6 +52,8 @@ const Dashboard = () => {
     const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
     const [isLoaded, setIsLoaded] = useState(false);
     const [widgetSettings, setWidgetSettings] = useState<Record<string, WidgetSettings>>({});
+    const [userName, setUserName] = useState('Casper');
+    const [weatherLocation, setWeatherLocation] = useState('London, UK');
 
     useEffect(() => {
         // Load events from LocalStorage
@@ -89,6 +95,12 @@ const Dashboard = () => {
             }
         }
 
+        const savedUser = localStorage.getItem(USER_STORAGE_KEY);
+        if (savedUser) setUserName(savedUser);
+
+        const savedWeather = localStorage.getItem(WEATHER_STORAGE_KEY);
+        if (savedWeather) setWeatherLocation(savedWeather);
+
         setIsLoaded(true);
     }, []);
 
@@ -123,6 +135,16 @@ const Dashboard = () => {
         });
     };
 
+    const handleNameChange = (name: string) => {
+        setUserName(name);
+        localStorage.setItem(USER_STORAGE_KEY, name);
+    };
+
+    const handleLocationChange = (location: string) => {
+        setWeatherLocation(location);
+        localStorage.setItem(WEATHER_STORAGE_KEY, location);
+    };
+
     const getWidgetProps = (id: string) => ({
         settings: widgetSettings[id] || DEFAULT_WIDGET_SETTINGS,
         onSettingsChange: (s: WidgetSettings) => handleSettingsChange(id, s),
@@ -130,17 +152,6 @@ const Dashboard = () => {
 
     return (
         <div className="w-full min-h-screen pb-20">
-            <div className="flex justify-end mb-4 px-2">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={resetLayout}
-                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
-                >
-                    <RotateCcw size={14} />
-                    Reset Layout
-                </Button>
-            </div>
             <ResponsiveGridLayout
                 className="layout"
                 layouts={layouts}
@@ -163,8 +174,22 @@ const Dashboard = () => {
                 </Widget>
 
                 {/* Original Widgets */}
-                <Widget key="weather" title="Weather" {...getWidgetProps('weather')}>
-                    <WeatherWidget />
+                <Widget
+                    key="weather"
+                    title="Weather"
+                    {...getWidgetProps('weather')}
+                    customSettings={
+                        <div className="p-2">
+                            <label className="text-xs font-medium mb-1 block">Location</label>
+                            <Input
+                                value={weatherLocation}
+                                onChange={(e) => handleLocationChange(e.target.value)}
+                                className="h-8 text-xs"
+                            />
+                        </div>
+                    }
+                >
+                    <WeatherWidget location={weatherLocation} />
                 </Widget>
                 <Widget key="music" title="Music Player" {...getWidgetProps('music')}>
                     <MusicPlayerWidget />
@@ -181,13 +206,22 @@ const Dashboard = () => {
                     <TodoListWidget events={events} />
                 </Widget>
 
-                <Widget key="welcome" title="Welcome" {...getWidgetProps('welcome')}>
-                    <div className="flex items-center justify-between h-full">
-                        <div>
-                            <h2 className="text-xl font-bold text-foreground">Welcome back, Casper!</h2>
-                            <p className="text-muted-foreground">Here is what's happening with your projects today.</p>
+                <Widget
+                    key="welcome"
+                    title="Welcome"
+                    {...getWidgetProps('welcome')}
+                    customSettings={
+                        <div className="p-2">
+                            <label className="text-xs font-medium mb-1 block">Display Name</label>
+                            <Input
+                                value={userName}
+                                onChange={(e) => handleNameChange(e.target.value)}
+                                className="h-8 text-xs"
+                            />
                         </div>
-                    </div>
+                    }
+                >
+                    <WelcomeWidget name={userName} />
                 </Widget>
 
             </ResponsiveGridLayout>

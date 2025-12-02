@@ -1,7 +1,7 @@
 'use client';
 
 import React, { forwardRef } from 'react';
-import { GripHorizontal, Settings } from 'lucide-react';
+import { GripHorizontal } from 'lucide-react';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -34,6 +34,7 @@ interface WidgetProps extends React.HTMLAttributes<HTMLDivElement> {
     title: string;
     settings?: WidgetSettings;
     onSettingsChange?: (settings: WidgetSettings) => void;
+    customSettings?: React.ReactNode;
 }
 
 const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
@@ -46,6 +47,7 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
     onTouchEnd,
     settings = DEFAULT_WIDGET_SETTINGS,
     onSettingsChange,
+    customSettings,
     ...props
 }, ref) => {
 
@@ -83,13 +85,23 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
                 <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2 text-muted-foreground">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <button className="hover:text-foreground transition-colors cursor-pointer" onMouseDown={(e) => e.stopPropagation()}>
-                                <Settings size={14} />
+                            <button
+                                className="hover:text-foreground transition-colors cursor-pointer"
+                                onMouseDown={(e) => e.stopPropagation()}
+                            >
+                                <GripHorizontal size={16} />
                             </button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48">
                             <DropdownMenuLabel>Widget Settings</DropdownMenuLabel>
                             <DropdownMenuSeparator />
+
+                            {customSettings && (
+                                <>
+                                    {customSettings}
+                                    <DropdownMenuSeparator />
+                                </>
+                            )}
 
                             <DropdownMenuSub>
                                 <DropdownMenuSubTrigger>Padding</DropdownMenuSubTrigger>
@@ -131,13 +143,12 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
                             </DropdownMenuSub>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <GripHorizontal size={16} />
                 </div>
             </div>
             <div className={`flex-1 overflow-auto custom-scrollbar ${settings.padding} ${settings.fontSize} ${settings.fontFamily}`}>
                 {children}
             </div>
-        </div>
+        </div >
     );
 });
 

@@ -3,12 +3,16 @@
 import React from 'react';
 import { CloudSun, Wind, Droplets } from 'lucide-react';
 
-const WeatherWidget = () => {
+interface WeatherWidgetProps {
+    location?: string;
+}
+
+const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location = 'London, UK' }) => {
     return (
         <div className="h-full flex flex-col justify-between p-2">
             <div className="flex justify-between items-start">
                 <div>
-                    <h4 className="text-muted-foreground text-sm font-medium">London, UK</h4>
+                    <h4 className="text-muted-foreground text-sm font-medium">{location}</h4>
                     <p className="text-foreground text-xs mt-1">Partly Cloudy</p>
                 </div>
                 <CloudSun size={32} className="text-primary" />
