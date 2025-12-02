@@ -15,42 +15,106 @@ import QuickStatsWidget from './widgets/QuickStatsWidget';
 import HeystackProjectsWidget from './widgets/HeystackProjectsWidget';
 import ApplicationsWidget from './widgets/ApplicationsWidget';
 
+import { Button } from "@/components/ui/button";
+import { RotateCcw } from "lucide-react";
+
 const ResponsiveGridLayout = WidthProvider(Responsive);
+
+const STORAGE_KEY = 'heystack-dashboard-layout';
+const EVENTS_STORAGE_KEY = 'heystack-dashboard-events';
+
+const DEFAULT_LAYOUTS = {
+    lg: [
+        { i: 'stats', x: 0, y: 0, w: 3, h: 10 },
+        { i: 'heystack_projects', x: 3, y: 0, w: 3, h: 14 },
+        { i: 'applications', x: 6, y: 0, w: 3, h: 6 },
+        { i: 'weather', x: 9, y: 0, w: 3, h: 4 },
+        { i: 'music', x: 9, y: 4, w: 3, h: 4 },
+        { i: 'projects', x: 6, y: 6, w: 3, h: 4 },
+        { i: 'calendar', x: 0, y: 10, w: 4, h: 8 },
+        { i: 'todo', x: 4, y: 14, w: 4, h: 8 },
+        { i: 'welcome', x: 8, y: 10, w: 4, h: 6 },
+    ],
+};
+
+const getDefaultEvents = (): CalendarEvent[] => [
+    { id: '1', title: 'Project Review', date: new Date(new Date().setHours(new Date().getHours() + 2)) },
+    { id: '2', title: 'Team Lunch', date: new Date(new Date().setDate(new Date().getDate() + 1)) },
+];
 
 const Dashboard = () => {
     const [events, setEvents] = useState<CalendarEvent[]>([]);
+    const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        setEvents([
-            { id: '1', title: 'Project Review', date: new Date(new Date().setHours(new Date().getHours() + 2)) },
-            { id: '2', title: 'Team Lunch', date: new Date(new Date().setDate(new Date().getDate() + 1)) },
-        ]);
+        // Load events from LocalStorage
+        const savedEvents = localStorage.getItem(EVENTS_STORAGE_KEY);
+        if (savedEvents) {
+            try {
+                const parsedEvents = JSON.parse(savedEvents);
+                // Convert date strings back to Date objects
+                const eventsWithDates = parsedEvents.map((e: any) => ({
+                    ...e,
+                    date: new Date(e.date)
+                }));
+                setEvents(eventsWithDates);
+            } catch (e) {
+                console.error("Failed to parse saved events", e);
+                setEvents(getDefaultEvents());
+            }
+        } else {
+            setEvents(getDefaultEvents());
+        }
+
+        // Load layout from LocalStorage on mount
+        const savedLayout = localStorage.getItem(STORAGE_KEY);
+        if (savedLayout) {
+            try {
+                setLayouts(JSON.parse(savedLayout));
+            } catch (e) {
+                console.error("Failed to parse saved layout", e);
+            }
+        }
+        setIsLoaded(true);
     }, []);
 
-    const [layouts, setLayouts] = useState({
-        lg: [
-            { i: 'stats', x: 0, y: 0, w: 3, h: 10 },
-            { i: 'heystack_projects', x: 3, y: 0, w: 3, h: 14 },
-            { i: 'applications', x: 6, y: 0, w: 3, h: 6 },
-            { i: 'weather', x: 9, y: 0, w: 3, h: 4 },
-            { i: 'music', x: 9, y: 4, w: 3, h: 4 },
-            { i: 'projects', x: 6, y: 6, w: 3, h: 4 },
-            { i: 'calendar', x: 0, y: 10, w: 4, h: 8 },
-            { i: 'todo', x: 4, y: 14, w: 4, h: 8 },
-            { i: 'welcome', x: 8, y: 10, w: 4, h: 6 },
-        ],
-    });
+    const onLayoutChange = (layout: any, allLayouts: any) => {
+        setLayouts(allLayouts);
+        if (isLoaded) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(allLayouts));
+        }
+    };
 
-    const onLayoutChange = (layout: any, layouts: any) => {
-        setLayouts(layouts);
+    const resetLayout = () => {
+        setLayouts(DEFAULT_LAYOUTS);
+        localStorage.removeItem(STORAGE_KEY);
+
+        setEvents(getDefaultEvents());
+        localStorage.removeItem(EVENTS_STORAGE_KEY);
     };
 
     const handleAddEvent = (newEvent: CalendarEvent) => {
-        setEvents(prev => [...prev, newEvent]);
+        setEvents(prev => {
+            const updatedEvents = [...prev, newEvent];
+            localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify(updatedEvents));
+            return updatedEvents;
+        });
     };
 
     return (
         <div className="w-full min-h-screen pb-20">
+            <div className="flex justify-end mb-4 px-2">
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={resetLayout}
+                    className="flex items-center gap-2 text-muted-foreground hover:text-foreground"
+                >
+                    <RotateCcw size={14} />
+                    Reset Layout
+                </Button>
+            </div>
             <ResponsiveGridLayout
                 className="layout"
                 layouts={layouts}
