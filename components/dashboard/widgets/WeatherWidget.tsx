@@ -29,21 +29,29 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location = 'London, UK' }
 
             try {
                 // 1. Geocoding
-                const geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1&language=en&format=json`);
-                const geoData = await geoRes.json();
+                // Try exact search first
+                let geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(location)}&count=1&language=en&format=json`);
+                let geoData = await geoRes.json();
 
-                if (!geoData.results || geoData.results.length === 0) {
-                    throw new Error('Location not found');
+                // If not found, try splitting by comma (e.g. "London, UK" -> "London")
+                if ((!geoData.results || geoData.results.length === 0) && location.includes(',')) {
+                    const cityOnly = location.split(',')[0].trim();
+                    geoRes = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cityOnly)}&count=1&language=en&format=json`);
+                    geoData = await geoRes.json();
                 }
 
-                const { latitude, longitude, name, country_code } = geoData.results[0];
+                if (!geoData.results || geoData.results.length === 0) {
+                    throw new Error(`Location "${location}" not found`);
+                }
+
+                const { latitude, longitude } = geoData.results[0];
 
                 // 2. Weather Data
                 const weatherRes = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m,is_day`);
                 const weatherData = await weatherRes.json();
 
                 if (weatherData.error) {
-                    throw new Error('Failed to fetch weather');
+                    throw new Error('Failed to fetch weather data');
                 }
 
                 setWeather({
@@ -55,7 +63,7 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location = 'London, UK' }
                 });
 
             } catch (err) {
-                console.error(err);
+                console.error("Weather Widget Error:", err);
                 setError(err instanceof Error ? err.message : 'Error loading weather');
             } finally {
                 setLoading(false);
