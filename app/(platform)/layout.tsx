@@ -13,10 +13,9 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationsDropdown } from "@/components/notifications-dropdown"
-import { ThemeGenerator } from "@/components/theme-generator"
 import { NavBarWrapper } from "@/components/nav-bar-wrapper"
 import { GradientBackground } from "@/components/gradient-background"
-import { GradientOriginPicker } from "@/components/gradient-origin-picker"
+import { NavbarSettings } from "@/components/navbar-settings"
 
 
 export default function PlatformLayout({
@@ -57,16 +56,14 @@ export default function PlatformLayout({
                             </Link>
                         </nav>
                     </div>
-                    <div className="flex-1 flex justify-center gap-3 items-center">
-                        <ThemeGenerator />
-                        <GradientOriginPicker />
-                    </div>
+                    <div className="flex-1" />
                     <nav className="flex items-center space-x-2">
                         <Button size="sm" className="hidden sm:flex">
                             <Plus className="mr-2 h-4 w-4" />
                             Create Project
                         </Button>
                         <NotificationsDropdown />
+                        <NavbarSettings />
                         <ThemeToggle />
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -94,8 +91,10 @@ export default function PlatformLayout({
                                     Settings
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator />
-                                <DropdownMenuItem>
-                                    Log out
+                                <DropdownMenuItem asChild>
+                                    <Link href="/login">
+                                        Log out
+                                    </Link>
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

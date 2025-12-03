@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ThemeGenerator } from "@/components/theme-generator";
 import { NavBarWrapper } from "@/components/nav-bar-wrapper";
 import { GradientBackground } from "@/components/gradient-background";
-import { GradientOriginPicker } from "@/components/gradient-origin-picker";
+import { NavbarSettings } from "@/components/navbar-settings";
 
 
 export default function LandingPage() {
@@ -16,10 +15,7 @@ export default function LandingPage() {
         <Link className="flex items-center justify-center" href="/">
           <span className="font-bold text-xl">HeyStack</span>
         </Link>
-        <div className="flex-1 flex justify-center gap-3 items-center">
-          <ThemeGenerator />
-          <GradientOriginPicker />
-        </div>
+        <div className="flex-1" />
         <nav className="flex gap-4 sm:gap-6 items-center">
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="/browse">
             Find Projects
@@ -30,6 +26,7 @@ export default function LandingPage() {
           <Link href="/dashboard">
             <Button size="sm">Dashboard</Button>
           </Link>
+          <NavbarSettings />
           <ThemeToggle />
         </nav>
       </NavBarWrapper>
