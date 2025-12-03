@@ -26,12 +26,6 @@ export default function LandingPage() {
         </Link>
         <div className="flex-1" />
         <nav className="flex gap-4 sm:gap-6 items-center">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/browse">
-            Find Projects
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/recruiter">
-            Post Project
-          </Link>
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dashboard">
             Dashboard
           </Link>
@@ -85,14 +79,20 @@ export default function LandingPage() {
                   The central hub for finding collaborators, joining exciting initiatives, and showcasing your work to the university community.
                 </p>
               </div>
-              <div className="space-x-4">
+              <div className="space-x-4 flex items-center justify-center">
                 <Link href="/browse">
-                  <Button size="lg" className="h-11 px-8">
+                  <Button
+                    variant="outline"
+                    className="h-11 px-6 text-base"
+                  >
                     Find Projects
                   </Button>
                 </Link>
                 <Link href="/recruiter">
-                  <Button variant="outline" size="lg" className="h-11 px-8 btn-accent-custom border-0">
+                  <Button
+                    variant="outline"
+                    className="h-11 px-6 text-base"
+                  >
                     Post a Project
                   </Button>
                 </Link>
