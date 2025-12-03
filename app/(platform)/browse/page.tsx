@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 import { ApplicationDialog } from "@/components/application-dialog"
 import { useApplications } from "@/components/application-provider"
+import { Badge } from "@/components/ui/badge"
 
 // Mock Data
 const MOCK_PROJECTS = [
@@ -54,13 +55,29 @@ const MOCK_PROJECTS = [
 export default function BrowsePage() {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedProject, setSelectedProject] = useState<{ id: number, title: string } | null>(null)
+    const [selectedTags, setSelectedTags] = useState<string[]>([])
     const { hasApplied } = useApplications()
 
-    const filteredProjects = MOCK_PROJECTS.filter(project =>
-        project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-    )
+    // Extract all unique tags
+    const allTags = Array.from(new Set(MOCK_PROJECTS.flatMap(project => project.tags))).sort()
+
+    const toggleTag = (tag: string) => {
+        setSelectedTags(prev =>
+            prev.includes(tag)
+                ? prev.filter(t => t !== tag)
+                : [...prev, tag]
+        )
+    }
+
+    const filteredProjects = MOCK_PROJECTS.filter(project => {
+        const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            project.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+
+        const matchesTags = selectedTags.length === 0 || selectedTags.every(tag => project.tags.includes(tag))
+
+        return matchesSearch && matchesTags
+    })
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -73,15 +90,43 @@ export default function BrowsePage() {
                     </p>
                 </div>
 
-                {/* Search Bar */}
-                <div className="relative max-w-md">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                        placeholder="Search projects by title, description, or tags..."
-                        className="pl-10"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                {/* Search and Filter */}
+                <div className="space-y-4">
+                    {/* Search Bar */}
+                    <div className="relative max-w-md">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            placeholder="Search projects by title, description, or tags..."
+                            className="pl-10"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+
+                    {/* Tag Filters */}
+                    <div className="flex flex-wrap gap-2 items-center">
+                        <span className="text-sm text-muted-foreground mr-2">Filter by:</span>
+                        {allTags.map(tag => (
+                            <Badge
+                                key={tag}
+                                variant={selectedTags.includes(tag) ? "default" : "outline"}
+                                className="cursor-pointer hover:bg-primary/90 transition-colors"
+                                onClick={() => toggleTag(tag)}
+                            >
+                                {tag}
+                            </Badge>
+                        ))}
+                        {selectedTags.length > 0 && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSelectedTags([])}
+                                className="ml-2 h-6 px-2 text-xs"
+                            >
+                                Clear Filters
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Content */}
@@ -120,7 +165,7 @@ export default function BrowsePage() {
                     })}
                     {filteredProjects.length === 0 && (
                         <div className="col-span-full text-center py-12 text-muted-foreground">
-                            No projects found matching "{searchQuery}"
+                            No projects found matching your criteria
                         </div>
                     )}
                 </div>

@@ -10,6 +10,7 @@ interface UserContextType {
 
 const defaultUser: UserProfileValues = {
     name: "Casper Student",
+    email: "student@example.com",
     bio: "Computer Science student at KTH passionate about web development and AI.",
     skills: "React, Next.js, TypeScript, Python",
     portfolioUrl: "https://github.com/casper",
@@ -25,7 +26,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         const savedUser = localStorage.getItem("heystack-user")
         if (savedUser) {
             try {
-                setUser(JSON.parse(savedUser))
+                const parsedUser = JSON.parse(savedUser)
+                setUser({ ...defaultUser, ...parsedUser })
             } catch (e) {
                 console.error("Failed to parse user from local storage", e)
             }

@@ -4,6 +4,9 @@ export const userProfileSchema = z.object({
     name: z.string().min(2, {
         message: "Name must be at least 2 characters.",
     }),
+    email: z.string().email({
+        message: "Please enter a valid email address.",
+    }),
     bio: z.string().max(160).min(4),
     skills: z.string().min(2, {
         message: "Please enter at least one skill.",

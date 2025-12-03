@@ -60,6 +60,22 @@ export function ProfileForm() {
                 />
                 <FormField
                     control={form.control}
+                    name="email"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Email</FormLabel>
+                            <FormControl>
+                                <Input placeholder="student@example.com" {...field} />
+                            </FormControl>
+                            <FormDescription>
+                                This is your contact email.
+                            </FormDescription>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
                     name="bio"
                     render={({ field }) => (
                         <FormItem>

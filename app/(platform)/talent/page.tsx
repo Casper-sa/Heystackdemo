@@ -57,6 +57,7 @@ const MOCK_TALENT = [
 
 export default function BrowseTalentPage() {
     const [searchQuery, setSearchQuery] = useState("")
+    const [selectedSkills, setSelectedSkills] = useState<string[]>([])
     const { user } = useUser()
 
     const userCard = {
@@ -70,11 +71,26 @@ export default function BrowseTalentPage() {
 
     const allTalent = [userCard, ...MOCK_TALENT]
 
-    const filteredTalent = allTalent.filter(student =>
-        student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.major.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        student.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
-    )
+    // Extract all unique skills
+    const allSkills = Array.from(new Set(allTalent.flatMap(student => student.skills))).sort()
+
+    const toggleSkill = (skill: string) => {
+        setSelectedSkills(prev =>
+            prev.includes(skill)
+                ? prev.filter(s => s !== skill)
+                : [...prev, skill]
+        )
+    }
+
+    const filteredTalent = allTalent.filter(student => {
+        const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            student.major.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            student.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
+
+        const matchesSkills = selectedSkills.length === 0 || selectedSkills.every(skill => student.skills.includes(skill))
+
+        return matchesSearch && matchesSkills
+    })
 
     return (
         <div className="container mx-auto px-4 py-8">
@@ -87,15 +103,43 @@ export default function BrowseTalentPage() {
                     </p>
                 </div>
 
-                {/* Search Bar */}
-                <div className="relative max-w-md">
-                    <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                    <Input
-                        placeholder="Search students by name, major, or skills..."
-                        className="pl-10"
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                    />
+                {/* Search and Filter */}
+                <div className="space-y-4">
+                    {/* Search Bar */}
+                    <div className="relative max-w-md">
+                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                        <Input
+                            placeholder="Search students by name, major, or skills..."
+                            className="pl-10"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                    </div>
+
+                    {/* Skill Filters */}
+                    <div className="flex flex-wrap gap-2 items-center">
+                        <span className="text-sm text-muted-foreground mr-2">Filter by:</span>
+                        {allSkills.map(skill => (
+                            <Badge
+                                key={skill}
+                                variant={selectedSkills.includes(skill) ? "default" : "outline"}
+                                className="cursor-pointer hover:bg-primary/90 transition-colors"
+                                onClick={() => toggleSkill(skill)}
+                            >
+                                {skill}
+                            </Badge>
+                        ))}
+                        {selectedSkills.length > 0 && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setSelectedSkills([])}
+                                className="ml-2 h-6 px-2 text-xs"
+                            >
+                                Clear Filters
+                            </Button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Content */}
