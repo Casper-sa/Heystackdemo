@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import { GlassCard } from "@/components/ui/glass-card"
+import { ShadowGlassCard } from "@/components/shadow-glass-card"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
 
@@ -82,7 +83,7 @@ export default function BrowsePage() {
                 {/* Content */}
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {filteredProjects.map((project) => (
-                        <GlassCard key={project.id} className="hover:shadow-lg transition-shadow">
+                        <ShadowGlassCard key={project.id} className="hover:shadow-lg transition-shadow">
                             <CardHeader>
                                 <CardTitle>{project.title}</CardTitle>
                                 <CardDescription>
@@ -97,7 +98,7 @@ export default function BrowsePage() {
                                     View Details
                                 </Button>
                             </CardContent>
-                        </GlassCard>
+                        </ShadowGlassCard>
                     ))}
                     {filteredProjects.length === 0 && (
                         <div className="col-span-full text-center py-12 text-muted-foreground">

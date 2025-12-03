@@ -1,3 +1,5 @@
+"use client"
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -15,7 +17,18 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 
+import { useRef } from "react";
+import { useDynamicShadow } from "@/hooks/use-dynamic-shadow";
+
 export default function LandingPage() {
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const findProjectsBtnRef = useRef<HTMLButtonElement>(null);
+  const postProjectBtnRef = useRef<HTMLButtonElement>(null);
+
+  const headingShadow = useDynamicShadow(headingRef as React.RefObject<HTMLElement>, { type: 'text', opacity: 0.1, blur: 5 });
+  const findProjectsShadow = useDynamicShadow(findProjectsBtnRef as React.RefObject<HTMLElement>, { type: 'box' });
+  const postProjectShadow = useDynamicShadow(postProjectBtnRef as React.RefObject<HTMLElement>, { type: 'box' });
+
   return (
     <div className="flex flex-col min-h-screen relative">
       <GradientBackground />
@@ -72,7 +85,11 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6 mx-auto">
             <div className="flex flex-col items-center space-y-4 text-center">
               <div className="space-y-2">
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none">
+                <h1
+                  ref={headingRef}
+                  style={headingShadow}
+                  className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none transition-all duration-300"
+                >
                   Connect with Student Projects at KTH
                 </h1>
                 <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
@@ -82,16 +99,20 @@ export default function LandingPage() {
               <div className="space-x-4 flex items-center justify-center">
                 <Link href="/browse">
                   <Button
+                    ref={findProjectsBtnRef}
+                    style={findProjectsShadow}
                     variant="outline"
-                    className="h-11 px-6 text-base"
+                    className="h-11 px-6 text-base transition-all duration-300"
                   >
                     Find Projects
                   </Button>
                 </Link>
                 <Link href="/recruiter">
                   <Button
+                    ref={postProjectBtnRef}
+                    style={postProjectShadow}
                     variant="outline"
-                    className="h-11 px-6 text-base"
+                    className="h-11 px-6 text-base transition-all duration-300"
                   >
                     Post a Project
                   </Button>
