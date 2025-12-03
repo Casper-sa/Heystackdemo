@@ -138,6 +138,7 @@ export function GradientBackground() {
 
         let centerColor: string
         let outerColor: string
+        let glareGradient = ''
 
         // Base chroma from vibrancy
         const chroma = vibrancy * 0.3
@@ -154,10 +155,14 @@ export function GradientBackground() {
             centerColor = `oklch(1 ${chroma * 0.2} ${brandHue})`
             // Outer: slightly darker
             outerColor = `oklch(0.64 ${chroma * 0.5} ${brandHue})`
+
+            // Glare effect for light mode
+            // Bright white center fading to transparent
+            glareGradient = `radial-gradient(circle at ${gradientOriginX}% ${gradientOriginY}%, white 0%, transparent 40%), `
         }
 
         return {
-            background: `radial-gradient(circle at ${gradientOriginX}% ${gradientOriginY}%, ${centerColor} 0%, ${centerColor} ${gradientSize}%, ${outerColor} 100%)`,
+            background: `${glareGradient}radial-gradient(circle at ${gradientOriginX}% ${gradientOriginY}%, ${centerColor} 0%, ${centerColor} ${gradientSize}%, ${outerColor} 100%)`,
             minHeight: '100vh',
         }
     }, [mounted, isDark, brandHue, vibrancy, gradientOriginX, gradientOriginY, gradientSize])

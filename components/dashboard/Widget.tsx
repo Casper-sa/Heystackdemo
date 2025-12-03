@@ -1,8 +1,9 @@
 'use client';
 
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { GripHorizontal } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { useColorScheme } from '../color-scheme-provider';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -50,7 +51,58 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
     onSettingsChange,
     customSettings,
     ...props
-}, ref) => {
+}, forwardedRef) => {
+    const { gradientOriginX, gradientOriginY } = useColorScheme();
+    const internalRef = useRef<HTMLDivElement>(null);
+    const ref = (forwardedRef as React.RefObject<HTMLDivElement>) || internalRef;
+    const [shadowStyle, setShadowStyle] = useState<React.CSSProperties>({});
+
+    useEffect(() => {
+        const updateShadow = () => {
+            if (!ref.current) return;
+
+            const rect = ref.current.getBoundingClientRect();
+            const widgetCenterX = rect.left + rect.width / 2;
+            const widgetCenterY = rect.top + rect.height / 2;
+
+            const originX = window.innerWidth * (gradientOriginX / 100);
+            const originY = window.innerHeight * (gradientOriginY / 100);
+
+            const dx = widgetCenterX - originX;
+            const dy = widgetCenterY - originY;
+
+            // Calculate distance to scale shadow intensity/length if needed, 
+            // but for now just direction is key.
+            // Let's make the shadow offset proportional to the distance but capped or scaled down.
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            const maxDistance = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight);
+
+            // Scale factor: 0 at origin, increasing as we move away.
+            // Let's say max shadow offset is 10px.
+            const shadowLength = Math.min(distance / 50, 15); // Cap at 15px
+
+            // Normalize direction
+            const angle = Math.atan2(dy, dx);
+            const shadowX = Math.cos(angle) * shadowLength;
+            const shadowY = Math.sin(angle) * shadowLength;
+
+            setShadowStyle({
+                boxShadow: `${shadowX}px ${shadowY}px 20px rgba(0,0,0,0.1)`
+            });
+        };
+
+        updateShadow();
+        window.addEventListener('resize', updateShadow);
+        // Also update when scrolling if the gradient is fixed but widgets move? 
+        // The gradient background is fixed, widgets scroll. 
+        // If widgets scroll, their position relative to viewport changes, so shadow should change.
+        window.addEventListener('scroll', updateShadow);
+
+        return () => {
+            window.removeEventListener('resize', updateShadow);
+            window.removeEventListener('scroll', updateShadow);
+        };
+    }, [gradientOriginX, gradientOriginY]);
 
     const updateSetting = (key: keyof WidgetSettings, value: string) => {
         if (onSettingsChange) {
@@ -64,7 +116,7 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
     return (
         <div
             ref={ref}
-            style={style}
+            style={{ ...style, ...shadowStyle }}
             onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}
             onTouchEnd={onTouchEnd}
