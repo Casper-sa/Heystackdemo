@@ -2,25 +2,34 @@
 
 import React from 'react';
 import { Badge } from "@/components/ui/badge";
+import { useApplications } from "@/components/application-provider";
+import { formatDistanceToNow } from "date-fns";
 
 const ApplicationsWidget = () => {
+    const { applications } = useApplications();
+
     return (
-        <div className="h-full overflow-auto p-1">
+        <div className="h-full overflow-auto p-1 custom-scrollbar">
             <div className="divide-y border rounded-md bg-background/50">
-                <div className="flex items-center justify-between p-3">
-                    <div>
-                        <h3 className="font-medium text-sm">Quantum Computing</h3>
-                        <p className="text-xs text-muted-foreground">Applied 3 days ago</p>
+                {applications.length === 0 ? (
+                    <div className="p-4 text-center text-xs text-muted-foreground">
+                        No applications yet
                     </div>
-                    <Badge variant="secondary" className="text-[10px]">Review</Badge>
-                </div>
-                <div className="flex items-center justify-between p-3">
-                    <div>
-                        <h3 className="font-medium text-sm">FinTech App</h3>
-                        <p className="text-xs text-muted-foreground">Applied 1 week ago</p>
-                    </div>
-                    <Badge variant="secondary" className="text-[10px]">Review</Badge>
-                </div>
+                ) : (
+                    applications.map((app) => (
+                        <div key={app.id} className="flex items-center justify-between p-3">
+                            <div>
+                                <h3 className="font-medium text-sm">{app.projectTitle}</h3>
+                                <p className="text-xs text-muted-foreground">
+                                    Applied {formatDistanceToNow(new Date(app.appliedDate))} ago
+                                </p>
+                            </div>
+                            <Badge variant={app.status === "Pending" ? "secondary" : "default"} className="text-[10px]">
+                                {app.status}
+                            </Badge>
+                        </div>
+                    ))
+                )}
             </div>
         </div>
     );

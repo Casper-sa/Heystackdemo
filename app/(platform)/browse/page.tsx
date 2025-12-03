@@ -8,6 +8,8 @@ import { GlassCard } from "@/components/ui/glass-card"
 import { ShadowGlassCard } from "@/components/shadow-glass-card"
 import { Input } from "@/components/ui/input"
 import { Search } from "lucide-react"
+import { ApplicationDialog } from "@/components/application-dialog"
+import { useApplications } from "@/components/application-provider"
 
 // Mock Data
 const MOCK_PROJECTS = [
@@ -51,6 +53,8 @@ const MOCK_PROJECTS = [
 
 export default function BrowsePage() {
     const [searchQuery, setSearchQuery] = useState("")
+    const [selectedProject, setSelectedProject] = useState<{ id: number, title: string } | null>(null)
+    const { hasApplied } = useApplications()
 
     const filteredProjects = MOCK_PROJECTS.filter(project =>
         project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -82,24 +86,38 @@ export default function BrowsePage() {
 
                 {/* Content */}
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                    {filteredProjects.map((project) => (
-                        <ShadowGlassCard key={project.id} className="hover:shadow-lg transition-shadow">
-                            <CardHeader>
-                                <CardTitle>{project.title}</CardTitle>
-                                <CardDescription>
-                                    {project.tags.join(", ")}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
-                                    {project.description}
-                                </p>
-                                <Button variant="outline" size="sm" className="w-full btn-accent-custom border-0">
-                                    View Details
-                                </Button>
-                            </CardContent>
-                        </ShadowGlassCard>
-                    ))}
+                    {filteredProjects.map((project) => {
+                        const isApplied = hasApplied(project.id)
+                        return (
+                            <ShadowGlassCard key={project.id} className="hover:shadow-lg transition-shadow">
+                                <CardHeader>
+                                    <CardTitle>{project.title}</CardTitle>
+                                    <CardDescription>
+                                        {project.tags.join(", ")}
+                                    </CardDescription>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-sm text-muted-foreground mb-4 line-clamp-3">
+                                        {project.description}
+                                    </p>
+                                    <div className="flex gap-2">
+                                        <Button variant="outline" size="sm" className="flex-1">
+                                            View Details
+                                        </Button>
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex-1"
+                                            disabled={isApplied}
+                                            onClick={() => setSelectedProject({ id: project.id, title: project.title })}
+                                        >
+                                            {isApplied ? "Applied" : "Apply"}
+                                        </Button>
+                                    </div>
+                                </CardContent>
+                            </ShadowGlassCard>
+                        )
+                    })}
                     {filteredProjects.length === 0 && (
                         <div className="col-span-full text-center py-12 text-muted-foreground">
                             No projects found matching "{searchQuery}"
@@ -107,6 +125,13 @@ export default function BrowsePage() {
                     )}
                 </div>
             </div>
+
+            <ApplicationDialog
+                open={!!selectedProject}
+                onOpenChange={(open) => !open && setSelectedProject(null)}
+                projectId={selectedProject?.id || 0}
+                projectTitle={selectedProject?.title || ""}
+            />
         </div>
     )
 }

@@ -83,7 +83,12 @@ export default function PlatformLayout({
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem asChild>
-                                <Link href="/profile">
+                                <Link href="/applications" className="w-full cursor-pointer">
+                                    My Applications
+                                </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                                <Link href="/profile" className="w-full cursor-pointer">
                                     Profile
                                 </Link>
                             </DropdownMenuItem>

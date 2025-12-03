@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { ColorSchemeProvider } from "@/components/color-scheme-provider";
 import { GradientBackground } from "@/components/gradient-background";
 import { UserProvider } from "@/components/user-provider";
+import { ApplicationProvider } from "@/components/application-provider";
 
 
 const geistSans = Geist({
@@ -38,8 +39,10 @@ export default function RootLayout({
         >
           <ColorSchemeProvider>
             <UserProvider>
-              <GradientBackground />
-              {children}
+              <ApplicationProvider>
+                <GradientBackground />
+                {children}
+              </ApplicationProvider>
             </UserProvider>
           </ColorSchemeProvider>
         </ThemeProvider>
