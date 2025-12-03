@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { NavBarWrapper } from "@/components/nav-bar-wrapper";
-import { GradientBackground } from "@/components/gradient-background";
 import { NavbarSettings } from "@/components/navbar-settings";
 import {
   DropdownMenu,
@@ -15,8 +14,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-
 import { useRef } from "react";
 import { useDynamicShadow } from "@/hooks/use-dynamic-shadow";
 
@@ -31,7 +28,6 @@ export default function LandingPage() {
 
   return (
     <div className="flex flex-col min-h-screen relative">
-      <GradientBackground />
       {/* Navbar Placeholder */}
       <NavBarWrapper className="px-4 lg:px-6 h-14 flex items-center border-b">
         <Link className="flex items-center justify-center" href="/">

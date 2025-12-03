@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ColorSchemeProvider } from "@/components/color-scheme-provider";
+import { GradientBackground } from "@/components/gradient-background";
 
 
 const geistSans = Geist({
@@ -35,6 +36,7 @@ export default function RootLayout({
           storageKey="heystack-theme"
         >
           <ColorSchemeProvider>
+            <GradientBackground />
             {children}
           </ColorSchemeProvider>
         </ThemeProvider>

@@ -14,10 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { NotificationsDropdown } from "@/components/notifications-dropdown"
 import { NavBarWrapper } from "@/components/nav-bar-wrapper"
-import { GradientBackground } from "@/components/gradient-background"
 import { NavbarSettings } from "@/components/navbar-settings"
-
-
 import { HaystackLogo } from "@/components/haystack-logo"
 
 export default function PlatformLayout({
@@ -27,7 +24,6 @@ export default function PlatformLayout({
 }) {
     return (
         <div className="min-h-screen flex flex-col relative">
-            <GradientBackground />
             {/* Top Navbar */}
             <NavBarWrapper className="sticky top-0 z-50 w-full border-b backdrop-blur supports-[backdrop-filter]:bg-opacity-95 px-4 lg:px-6 h-14 flex items-center">
                 <div className="mr-4 hidden md:flex">
