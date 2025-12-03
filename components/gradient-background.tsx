@@ -56,9 +56,9 @@ export function GradientBackground() {
                 stars.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
-                    size: Math.random() * 2,
+                    size: Math.random() * 1.5,
                     opacity: Math.random(),
-                    speed: 0.005 + Math.random() * 0.01
+                    speed: 0.001 + Math.random() * 0.01
                 })
             }
 
@@ -70,7 +70,7 @@ export function GradientBackground() {
                     y: Math.random() * (canvas.height / 2), // Keep clouds in upper half
                     size: 50 + Math.random() * 100,
                     opacity: 0.1 + Math.random() * 0.2,
-                    speed: 0.1 + Math.random() * 0.2
+                    speed: 0.05 + Math.random() * 0.2
                 })
             }
         }
