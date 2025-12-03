@@ -36,6 +36,15 @@ export function ColorSchemeProvider({ children }: { children: React.ReactNode })
 
             const savedVibrancy = localStorage.getItem("theme-vibrancy")
             if (savedVibrancy !== null) setVibrancyState(parseFloat(savedVibrancy))
+
+            const savedGradientX = localStorage.getItem("color-scheme-gradient-origin-x")
+            if (savedGradientX !== null) setGradientOriginXState(parseFloat(savedGradientX))
+
+            const savedGradientY = localStorage.getItem("color-scheme-gradient-origin-y")
+            if (savedGradientY !== null) setGradientOriginYState(parseFloat(savedGradientY))
+
+            const savedGradientSize = localStorage.getItem("color-scheme-gradient-size")
+            if (savedGradientSize !== null) setGradientSizeState(parseFloat(savedGradientSize))
         }
     }, [])
 
