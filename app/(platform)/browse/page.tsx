@@ -146,8 +146,10 @@ export default function BrowsePage() {
                                         {project.description}
                                     </p>
                                     <div className="flex gap-2">
-                                        <Button variant="outline" size="sm" className="flex-1">
-                                            View Details
+                                        <Button variant="outline" size="sm" className="flex-1" asChild>
+                                            <Link href={`/projects/${project.id}`}>
+                                                View Details
+                                            </Link>
                                         </Button>
                                         <Button
                                             variant="outline"

@@ -4,6 +4,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const HeystackProjectsWidget = () => {
     return (
@@ -26,7 +27,9 @@ const HeystackProjectsWidget = () => {
                         <span className="mx-2">•</span>
                         <span>2d ago</span>
                     </div>
-                    <Button variant="outline" className="w-full h-8 text-xs">Manage</Button>
+                    <Button variant="outline" className="w-full h-8 text-xs" asChild>
+                        <Link href="/projects/1/workspace">Manage</Link>
+                    </Button>
                 </CardContent>
             </Card>
 
@@ -48,7 +51,9 @@ const HeystackProjectsWidget = () => {
                         <span className="mx-2">•</span>
                         <span>1w ago</span>
                     </div>
-                    <Button variant="outline" className="w-full h-8 text-xs">Edit</Button>
+                    <Button variant="outline" className="w-full h-8 text-xs" asChild>
+                        <Link href="/projects/2/workspace">Edit</Link>
+                    </Button>
                 </CardContent>
             </Card>
 
@@ -70,7 +75,9 @@ const HeystackProjectsWidget = () => {
                         <span className="mx-2">•</span>
                         <span>1d ago</span>
                     </div>
-                    <Button className="w-full h-8 text-xs">View</Button>
+                    <Button className="w-full h-8 text-xs" asChild>
+                        <Link href="/projects/3/workspace">View</Link>
+                    </Button>
                 </CardContent>
             </Card>
         </div>
