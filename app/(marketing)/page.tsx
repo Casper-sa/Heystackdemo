@@ -32,8 +32,8 @@ export default function LandingPage() {
           <Link className="text-sm font-medium hover:underline underline-offset-4" href="/recruiter">
             Post Project
           </Link>
-          <Link href="/dashboard">
-            <Button size="sm">Dashboard</Button>
+          <Link className="text-sm font-medium hover:underline underline-offset-4" href="/dashboard">
+            Dashboard
           </Link>
           <NavbarSettings />
           <ThemeToggle />
