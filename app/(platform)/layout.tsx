@@ -82,8 +82,10 @@ export default function PlatformLayout({
                                 </div>
                             </DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                Profile
+                            <DropdownMenuItem asChild>
+                                <Link href="/profile">
+                                    Profile
+                                </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
                                 Settings

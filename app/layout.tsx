@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ColorSchemeProvider } from "@/components/color-scheme-provider";
 import { GradientBackground } from "@/components/gradient-background";
+import { UserProvider } from "@/components/user-provider";
 
 
 const geistSans = Geist({
@@ -36,8 +37,10 @@ export default function RootLayout({
           storageKey="heystack-theme"
         >
           <ColorSchemeProvider>
-            <GradientBackground />
-            {children}
+            <UserProvider>
+              <GradientBackground />
+              {children}
+            </UserProvider>
           </ColorSchemeProvider>
         </ThemeProvider>
       </body>

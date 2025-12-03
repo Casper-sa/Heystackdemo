@@ -3,11 +3,11 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { GlassCard } from "@/components/ui/glass-card"
 import { ShadowGlassCard } from "@/components/shadow-glass-card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Search, MapPin, GraduationCap } from "lucide-react"
+import { useUser } from "@/components/user-provider"
 
 // Mock Data
 const MOCK_TALENT = [
@@ -57,8 +57,20 @@ const MOCK_TALENT = [
 
 export default function BrowseTalentPage() {
     const [searchQuery, setSearchQuery] = useState("")
+    const { user } = useUser()
 
-    const filteredTalent = MOCK_TALENT.filter(student =>
+    const userCard = {
+        id: 0,
+        name: user.name,
+        major: "Computer Science", // Default for now
+        location: "Stockholm, Sweden", // Default for now
+        skills: user.skills.split(",").map(s => s.trim()).filter(Boolean),
+        isUser: true
+    }
+
+    const allTalent = [userCard, ...MOCK_TALENT]
+
+    const filteredTalent = allTalent.filter(student =>
         student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         student.major.toLowerCase().includes(searchQuery.toLowerCase()) ||
         student.skills.some(skill => skill.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -89,7 +101,13 @@ export default function BrowseTalentPage() {
                 {/* Content */}
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {filteredTalent.map((student) => (
-                        <ShadowGlassCard key={student.id} className="hover:shadow-lg transition-shadow">
+                        <ShadowGlassCard key={student.id} className="hover:shadow-lg transition-shadow relative overflow-hidden">
+                            {/* @ts-ignore */}
+                            {student.isUser && (
+                                <div className="absolute top-0 right-0 p-2">
+                                    <Badge variant="default" className="bg-primary/20 text-primary hover:bg-primary/30">You</Badge>
+                                </div>
+                            )}
                             <CardHeader>
                                 <div className="flex items-start justify-between">
                                     <div className="space-y-1">

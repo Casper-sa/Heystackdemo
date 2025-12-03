@@ -19,13 +19,13 @@ import WelcomeWidget from './widgets/WelcomeWidget';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { RotateCcw } from "lucide-react";
+import { useUser } from "@/components/user-provider";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
 const STORAGE_KEY = 'heystack-dashboard-layout';
 const EVENTS_STORAGE_KEY = 'heystack-dashboard-events';
 const SETTINGS_STORAGE_KEY = 'heystack-dashboard-settings';
-const USER_STORAGE_KEY = 'heystack-dashboard-user';
 const WEATHER_STORAGE_KEY = 'heystack-dashboard-weather';
 
 const DEFAULT_LAYOUTS = {
@@ -48,11 +48,11 @@ const getDefaultEvents = (): CalendarEvent[] => [
 ];
 
 const Dashboard = () => {
+    const { user } = useUser();
     const [events, setEvents] = useState<CalendarEvent[]>([]);
     const [layouts, setLayouts] = useState(DEFAULT_LAYOUTS);
     const [isLoaded, setIsLoaded] = useState(false);
     const [widgetSettings, setWidgetSettings] = useState<Record<string, WidgetSettings>>({});
-    const [userName, setUserName] = useState('Casper');
     const [weatherLocation, setWeatherLocation] = useState('London, UK');
 
     useEffect(() => {
@@ -95,9 +95,6 @@ const Dashboard = () => {
             }
         }
 
-        const savedUser = localStorage.getItem(USER_STORAGE_KEY);
-        if (savedUser) setUserName(savedUser);
-
         const savedWeather = localStorage.getItem(WEATHER_STORAGE_KEY);
         if (savedWeather) setWeatherLocation(savedWeather);
 
@@ -133,11 +130,6 @@ const Dashboard = () => {
             localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(updated));
             return updated;
         });
-    };
-
-    const handleNameChange = (name: string) => {
-        setUserName(name);
-        localStorage.setItem(USER_STORAGE_KEY, name);
     };
 
     const handleLocationChange = (location: string) => {
@@ -210,18 +202,8 @@ const Dashboard = () => {
                     key="welcome"
                     title="Welcome"
                     {...getWidgetProps('welcome')}
-                    customSettings={
-                        <div className="p-2">
-                            <label className="text-xs font-medium mb-1 block">Display Name</label>
-                            <Input
-                                value={userName}
-                                onChange={(e) => handleNameChange(e.target.value)}
-                                className="h-8 text-xs"
-                            />
-                        </div>
-                    }
                 >
-                    <WelcomeWidget name={userName} />
+                    <WelcomeWidget name={user.name} />
                 </Widget>
 
             </ResponsiveGridLayout>
