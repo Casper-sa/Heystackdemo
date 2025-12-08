@@ -3,17 +3,20 @@
 import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Calendar, Users, Github, CheckCircle2, Circle, Clock } from "lucide-react"
+import { ArrowLeft, Calendar, Users, Github, CheckCircle2, Circle, Clock, Pin } from "lucide-react"
 import Link from "next/link"
 import { useApplications } from "@/components/application-provider"
 import { ApplicationDialog } from "@/components/application-dialog"
 import { useState } from "react"
-import { MOCK_PROJECTS } from "@/lib/data/mock-projects"
+import { useTasks } from "@/components/task-provider"
+import { useProjects } from "@/components/project-provider"
 
 export default function ProjectDetailsPage() {
     const params = useParams()
     const projectId = Number(params.id)
-    const project = MOCK_PROJECTS.find(p => p.id === projectId) || {
+    const { projects } = useProjects()
+
+    const project = projects.find(p => p.id === projectId) || {
         id: projectId,
         title: "Unknown Project",
         description: "Project details not found.",
@@ -27,6 +30,7 @@ export default function ProjectDetailsPage() {
     const { hasApplied } = useApplications()
     const isApplied = hasApplied(projectId)
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+    const { addTask, removeTask, isTaskPinned } = useTasks()
 
     return (
         <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -131,28 +135,50 @@ export default function ProjectDetailsPage() {
                                 Current Tasks
                             </h3>
                             <div className="space-y-3">
-                                {project.tasks.map(task => (
-                                    <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                                        {task.status === "Done" ? (
-                                            <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
-                                        ) : task.status === "In Progress" ? (
-                                            <Clock className="h-4 w-4 text-blue-500 mt-0.5" />
-                                        ) : (
-                                            <Circle className="h-4 w-4 text-muted-foreground mt-0.5" />
-                                        )}
-                                        <div className="flex-1 space-y-1">
-                                            <p className="text-sm font-medium leading-none">{task.title}</p>
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-xs text-muted-foreground">{task.status}</span>
-                                                {task.assignee && (
-                                                    <span className="text-xs text-muted-foreground bg-background px-1.5 py-0.5 rounded border">
-                                                        {task.assignee.split(" ").map(n => n[0]).join("")}
-                                                    </span>
-                                                )}
+                                {project.tasks.map(task => {
+                                    const taskId = `${project.id}-${task.id}`;
+                                    const isPinned = isTaskPinned(taskId);
+
+                                    return (
+                                        <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 group relative">
+                                            {task.status === "Done" ? (
+                                                <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                                            ) : task.status === "In Progress" ? (
+                                                <Clock className="h-4 w-4 text-blue-500 mt-0.5" />
+                                            ) : (
+                                                <Circle className="h-4 w-4 text-muted-foreground mt-0.5" />
+                                            )}
+                                            <div className="flex-1 space-y-1">
+                                                <div className="flex items-center justify-between">
+                                                    <p className="text-sm font-medium leading-none">{task.title}</p>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className={`h-6 w-6 ${isPinned ? 'text-primary opacity-100' : 'text-muted-foreground opacity-0 group-hover:opacity-100'} transition-all`}
+                                                        onClick={() => {
+                                                            if (isPinned) {
+                                                                removeTask(taskId);
+                                                            } else {
+                                                                addTask(taskId);
+                                                            }
+                                                        }}
+                                                        title={isPinned ? "Remove from Dashboard" : "Pin to Dashboard"}
+                                                    >
+                                                        <Pin className="h-3 w-3" fill={isPinned ? "currentColor" : "none"} />
+                                                    </Button>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <span className="text-xs text-muted-foreground">{task.status}</span>
+                                                    {task.assignee && (
+                                                        <span className="text-xs text-muted-foreground bg-background px-1.5 py-0.5 rounded border">
+                                                            {task.assignee.split(" ").map(n => n[0]).join("")}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                ))}
+                                    );
+                                })}
                             </div>
                         </div>
                     )}

@@ -5,13 +5,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { MOCK_PROJECTS } from "@/lib/data/mock-projects";
 import { CheckCircle2 } from "lucide-react";
+import { useProjects } from "@/components/project-provider";
 
 const HeystackProjectsWidget = () => {
+    const { projects } = useProjects();
+
     return (
         <div className="flex flex-col gap-4 h-full overflow-auto p-1 custom-scrollbar">
-            {MOCK_PROJECTS.filter(p => p.isMember).map((project) => {
+            {projects.filter(p => p.isMember).map((project) => {
                 const activeTasks = project.tasks?.filter(t => t.status !== "Done").length || 0;
 
                 return (
@@ -43,7 +45,7 @@ const HeystackProjectsWidget = () => {
                 );
             })}
 
-            {MOCK_PROJECTS.length === 0 && (
+            {projects.length === 0 && (
                 <div className="text-center text-muted-foreground text-sm py-8">
                     No projects found.
                 </div>
