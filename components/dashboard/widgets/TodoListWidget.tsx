@@ -49,7 +49,7 @@ const TodoListWidget: React.FC<TodoListWidgetProps> = ({ events = [] }) => {
     }
 
     return (
-        <div className="flex flex-col gap-3 h-full overflow-auto pr-1 custom-scrollbar">
+        <div className="grid grid-cols-1 @md:grid-cols-2 gap-3 h-full overflow-auto pr-1 custom-scrollbar content-start">
             {upcomingEvents.map(event => (
                 <div key={event.id} className="bg-background/50 rounded-[var(--radius)] p-3 border border-border flex items-center justify-between group hover:border-muted-foreground transition-colors">
                     <div className="min-w-0 flex-1">

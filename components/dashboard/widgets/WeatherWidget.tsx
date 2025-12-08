@@ -116,21 +116,23 @@ const WeatherWidget: React.FC<WeatherWidgetProps> = ({ location = 'London, UK' }
     const { icon: WeatherIcon, label } = getWeatherInfo(weather.code, weather.isDay);
 
     return (
-        <div className="h-full flex flex-col justify-between p-2">
-            <div className="flex justify-between items-start">
-                <div>
-                    <h4 className="text-muted-foreground text-sm font-medium truncate max-w-[100px]" title={location}>{location}</h4>
-                    <p className="text-foreground text-xs mt-1">{label}</p>
+        <div className="h-full flex flex-col @md:flex-row @md:items-center justify-between p-2 gap-4">
+            <div className="flex-1 flex flex-col justify-between h-full @md:justify-center @md:gap-2">
+                <div className="flex justify-between items-start @md:flex-col-reverse @md:gap-2">
+                    <div>
+                        <h4 className="text-muted-foreground text-sm font-medium truncate max-w-[100px]" title={location}>{location}</h4>
+                        <p className="text-foreground text-xs mt-1">{label}</p>
+                    </div>
+                    <WeatherIcon size={32} className="text-primary @md:self-start @md:mb-2" />
                 </div>
-                <WeatherIcon size={32} className="text-primary" />
+
+                <div className="flex items-end gap-2 mt-2 @md:mt-0">
+                    <span className="text-4xl font-bold text-foreground">{weather.temp}°</span>
+                    <span className="text-muted-foreground mb-1">C</span>
+                </div>
             </div>
 
-            <div className="flex items-end gap-2 mt-2">
-                <span className="text-4xl font-bold text-foreground">{weather.temp}°</span>
-                <span className="text-muted-foreground mb-1">C</span>
-            </div>
-
-            <div className="grid grid-cols-2 gap-2 mt-4">
+            <div className="grid grid-cols-2 @md:grid-cols-1 gap-2 mt-4 @md:mt-0 @md:w-1/3">
                 <div className="bg-background/30 rounded-[var(--radius)] p-2 flex items-center gap-2">
                     <Wind size={14} className="text-muted-foreground" />
                     <span className="text-xs text-foreground">{weather.windSpeed} km/h</span>
