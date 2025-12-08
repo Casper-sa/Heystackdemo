@@ -6,6 +6,14 @@ export interface ProjectTask {
     assignee?: string;
 }
 
+export interface Activity {
+    id: string;
+    user: { name: string; avatar?: string; initials: string };
+    action: "pushed" | "commented" | "uploaded" | "joined" | "completed" | "created" | "deployed";
+    target: string;
+    timestamp: string;
+}
+
 export interface Project {
     id: number;
     title: string;
@@ -15,6 +23,7 @@ export interface Project {
     repo: string;
     longDescription: string;
     tasks: ProjectTask[];
+    activity?: Activity[];
     isMember?: boolean;
 }
 
@@ -32,6 +41,13 @@ export const MOCK_PROJECTS: Project[] = [
             { id: 2, title: "Design user dashboard", status: "Done", assignee: "Alan Turing" },
             { id: 3, title: "Integrate calendar API", status: "To Do" }
         ],
+        activity: [
+            { id: "1", user: { name: "Alice Lovelace", initials: "AL" }, action: "pushed", target: "feat/summarization-api", timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString() }, // 30 mins ago
+            { id: "2", user: { name: "Alan Turing", initials: "AT" }, action: "completed", target: "Design user dashboard", timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString() }, // 2 hours ago
+            { id: "3", user: { name: "Casper", initials: "CA" }, action: "commented", target: "Great progress on the UI!", timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString() }, // 5 hours ago
+            { id: "4", user: { name: "Alice Lovelace", initials: "AL" }, action: "uploaded", target: "architecture-diagram.png", timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString() }, // 1 day ago
+            { id: "5", user: { name: "System", initials: "SYS" }, action: "created", target: "Project", timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2).toISOString() }, // 2 days ago
+        ],
         isMember: true
     },
     {
@@ -46,6 +62,10 @@ export const MOCK_PROJECTS: Project[] = [
             { id: 1, title: "Setup Stripe Connect", status: "In Progress", assignee: "Bob Jones" },
             { id: 2, title: "Create product listing page", status: "Done", assignee: "Alice Smith" },
             { id: 3, title: "Implement user verification", status: "To Do" }
+        ],
+        activity: [
+            { id: "1", user: { name: "Bob Jones", initials: "BJ" }, action: "commented", target: "Stripe verification is tricky.", timestamp: new Date(Date.now() - 1000 * 60 * 15).toISOString() },
+            { id: "2", user: { name: "Alice Smith", initials: "AS" }, action: "pushed", target: "fix/listing-layout", timestamp: new Date(Date.now() - 1000 * 60 * 60 * 1).toISOString() },
         ],
         isMember: false
     },

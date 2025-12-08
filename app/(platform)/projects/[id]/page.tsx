@@ -10,6 +10,7 @@ import { ApplicationDialog } from "@/components/application-dialog"
 import { useState } from "react"
 import { useTasks } from "@/components/task-provider"
 import { useProjects } from "@/components/project-provider"
+import { ActivityFeed } from "@/components/activity-feed"
 
 export default function ProjectDetailsPage() {
     const params = useParams()
@@ -203,6 +204,13 @@ export default function ProjectDetailsPage() {
                             </div>
                         </div>
                     </div>
+                    {project.isMember ? (
+                        <ActivityFeed initialActivities={project.activity} className="h-[350px]" />
+                    ) : (
+                        <div className="p-6 border rounded-xl bg-card shadow-sm text-center text-muted-foreground text-sm">
+                            Join the project to view activity.
+                        </div>
+                    )}
                 </div>
             </div>
 
