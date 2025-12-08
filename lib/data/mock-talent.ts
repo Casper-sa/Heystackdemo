@@ -1,4 +1,14 @@
 
+export interface PortfolioItem {
+    id: string;
+    title: string;
+    type: "image" | "video";
+    url: string;
+    description: string;
+    tags: string[];
+    size: "small" | "medium" | "large" | "tall" | "wide";
+}
+
 export interface TalentProfile {
     id: number;
     name: string;
@@ -25,6 +35,7 @@ export interface TalentProfile {
         status: "In Progress" | "Completed" | "On Hold";
         link?: string;
     }[];
+    portfolio?: PortfolioItem[];
     isUser?: boolean;
 }
 
@@ -65,6 +76,53 @@ export const MOCK_TALENT: TalentProfile[] = [
                 role: "Full Stack Developer",
                 status: "Completed",
                 link: "#"
+            }
+        ],
+        portfolio: [
+            {
+                id: "1",
+                title: "EcoTrack Dashboard",
+                type: "image",
+                url: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=800&auto=format&fit=crop",
+                description: "The main dashboard for the EcoTrack app, showing daily carbon usage graphs and tips.",
+                tags: ["React Native", "UI Design"],
+                size: "large"
+            },
+            {
+                id: "2",
+                title: "Login Flow",
+                type: "image",
+                url: "https://images.unsplash.com/photo-1555421689-491a97ff2040?q=80&w=800&auto=format&fit=crop",
+                description: "Secure and smooth login authentication screens.",
+                tags: ["UX", "Security"],
+                size: "tall"
+            },
+            {
+                id: "3",
+                title: "Carbon Calculator",
+                type: "image",
+                url: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=800&auto=format&fit=crop",
+                description: "Complex form for calculating carbon footprint based on daily activities.",
+                tags: ["Forms", "Logic"],
+                size: "medium"
+            },
+            {
+                id: "4",
+                title: "Course Review UI",
+                type: "image",
+                url: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800&auto=format&fit=crop",
+                description: "Clean card-based layout for viewing course reviews.",
+                tags: ["Web", "Design"],
+                size: "wide"
+            },
+            {
+                id: "5",
+                title: "Code Snippet",
+                type: "image",
+                url: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=800&auto=format&fit=crop",
+                description: "Optimized algorithm for data processing.",
+                tags: ["Code", "Backend"],
+                size: "small"
             }
         ]
     },

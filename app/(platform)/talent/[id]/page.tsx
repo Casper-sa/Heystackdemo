@@ -4,10 +4,12 @@ import { useParams, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, MapPin, GraduationCap, Building2, Calendar, FolderKanban, ExternalLink } from "lucide-react"
+import { ArrowLeft, MapPin, GraduationCap, Building2, Calendar, FolderKanban, ExternalLink, Code } from "lucide-react"
 import { MOCK_TALENT, TalentProfile } from "@/lib/data/mock-talent"
 import { useUser } from "@/components/user-provider"
 import { ShadowGlassCard } from "@/components/shadow-glass-card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { PortfolioGrid } from "@/components/portfolio/portfolio-grid"
 
 export default function TalentProfilePage() {
     const params = useParams()
@@ -93,92 +95,113 @@ export default function TalentProfilePage() {
 
                 {/* Main Content */}
                 <div className="md:col-span-2 space-y-6">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>About</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <p className="text-muted-foreground leading-relaxed">
-                                {profile.bio}
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <Tabs defaultValue="overview" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="overview">Overview</TabsTrigger>
+                            <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+                        </TabsList>
 
-                    {profile.projects && profile.projects.length > 0 && (
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Current Projects</CardTitle>
-                            </CardHeader>
-                            <CardContent className="grid gap-4">
-                                {profile.projects.map((project, index) => (
-                                    <div key={index} className="border rounded-lg p-4 space-y-2 hover:bg-accent/5 transition-colors">
-                                        <div className="flex items-start justify-between">
-                                            <div className="flex items-center gap-2">
-                                                <FolderKanban className="h-4 w-4 text-primary" />
-                                                <h3 className="font-semibold">{project.name}</h3>
+                        <TabsContent value="overview" className="space-y-6 mt-4">
+                            <Card>
+                                <CardHeader>
+                                    <CardTitle>About</CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <p className="text-muted-foreground leading-relaxed">
+                                        {profile.bio}
+                                    </p>
+                                </CardContent>
+                            </Card>
+
+                            {profile.projects && profile.projects.length > 0 && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Current Projects</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="grid gap-4">
+                                        {profile.projects.map((project, index) => (
+                                            <div key={index} className="border rounded-lg p-4 space-y-2 hover:bg-accent/5 transition-colors">
+                                                <div className="flex items-start justify-between">
+                                                    <div className="flex items-center gap-2">
+                                                        <FolderKanban className="h-4 w-4 text-primary" />
+                                                        <h3 className="font-semibold">{project.name}</h3>
+                                                    </div>
+                                                    <Badge variant={project.status === "In Progress" ? "default" : "secondary"}>
+                                                        {project.status}
+                                                    </Badge>
+                                                </div>
+                                                <p className="text-sm text-muted-foreground">{project.description}</p>
+                                                <div className="flex items-center justify-between text-sm pt-2">
+                                                    <span className="text-muted-foreground">Role: <span className="font-medium text-foreground">{project.role}</span></span>
+                                                    {project.link && (
+                                                        <a href={project.link} className="flex items-center gap-1 text-primary hover:underline">
+                                                            View Project <ExternalLink className="h-3 w-3" />
+                                                        </a>
+                                                    )}
+                                                </div>
                                             </div>
-                                            <Badge variant={project.status === "In Progress" ? "default" : "secondary"}>
-                                                {project.status}
-                                            </Badge>
-                                        </div>
-                                        <p className="text-sm text-muted-foreground">{project.description}</p>
-                                        <div className="flex items-center justify-between text-sm pt-2">
-                                            <span className="text-muted-foreground">Role: <span className="font-medium text-foreground">{project.role}</span></span>
-                                            {project.link && (
-                                                <a href={project.link} className="flex items-center gap-1 text-primary hover:underline">
-                                                    View Project <ExternalLink className="h-3 w-3" />
-                                                </a>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </CardContent>
-                        </Card>
-                    )}
+                                        ))}
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                    {profile.experience && profile.experience.length > 0 && (
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Experience</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                {profile.experience.map((exp, index) => (
-                                    <div key={index} className="flex gap-4">
-                                        <div className="mt-1 bg-primary/10 p-2 rounded-full h-fit">
-                                            <Building2 className="h-4 w-4 text-primary" />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">{exp.role}</h3>
-                                            <div className="text-sm text-muted-foreground mb-2">{exp.company} • {exp.duration}</div>
-                                            <p className="text-sm text-muted-foreground">{exp.description}</p>
-                                        </div>
-                                    </div>
-                                ))}
-                            </CardContent>
-                        </Card>
-                    )}
+                            {profile.experience && profile.experience.length > 0 && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Experience</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-6">
+                                        {profile.experience.map((exp, index) => (
+                                            <div key={index} className="flex gap-4">
+                                                <div className="mt-1 bg-primary/10 p-2 rounded-full h-fit">
+                                                    <Building2 className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-semibold">{exp.role}</h3>
+                                                    <div className="text-sm text-muted-foreground mb-2">{exp.company} • {exp.duration}</div>
+                                                    <p className="text-sm text-muted-foreground">{exp.description}</p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </CardContent>
+                                </Card>
+                            )}
 
-                    {profile.education && profile.education.length > 0 && (
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Education</CardTitle>
-                            </CardHeader>
-                            <CardContent className="space-y-6">
-                                {profile.education.map((edu, index) => (
-                                    <div key={index} className="flex gap-4">
-                                        <div className="mt-1 bg-primary/10 p-2 rounded-full h-fit">
-                                            <Calendar className="h-4 w-4 text-primary" />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">{edu.school}</h3>
-                                            <div className="text-sm text-muted-foreground">{edu.degree}</div>
-                                            <div className="text-sm text-muted-foreground">{edu.year}</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </CardContent>
-                        </Card>
-                    )}
+                            {profile.education && profile.education.length > 0 && (
+                                <Card>
+                                    <CardHeader>
+                                        <CardTitle>Education</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="space-y-6">
+                                        {profile.education.map((edu, index) => (
+                                            <div key={index} className="flex gap-4">
+                                                <div className="mt-1 bg-primary/10 p-2 rounded-full h-fit">
+                                                    <Calendar className="h-4 w-4 text-primary" />
+                                                </div>
+                                                <div>
+                                                    <h3 className="font-semibold">{edu.school}</h3>
+                                                    <div className="text-sm text-muted-foreground">{edu.degree}</div>
+                                                    <div className="text-sm text-muted-foreground">{edu.year}</div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </CardContent>
+                                </Card>
+                            )}
+                        </TabsContent>
+
+                        <TabsContent value="portfolio" className="mt-4">
+                            {profile.portfolio && profile.portfolio.length > 0 ? (
+                                <PortfolioGrid items={profile.portfolio} />
+                            ) : (
+                                <div className="text-center py-20 bg-muted/30 rounded-xl border border-dashed">
+                                    <Code className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+                                    <h3 className="text-lg font-semibold">No portfolio items yet</h3>
+                                    <p className="text-muted-foreground">This user hasn't uploaded any work samples.</p>
+                                </div>
+                            )}
+                        </TabsContent>
+                    </Tabs>
                 </div>
             </div>
         </div>
