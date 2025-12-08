@@ -3,34 +3,12 @@
 import { useParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Calendar, Users, Github, ExternalLink } from "lucide-react"
+import { ArrowLeft, Calendar, Users, Github, CheckCircle2, Circle, Clock } from "lucide-react"
 import Link from "next/link"
 import { useApplications } from "@/components/application-provider"
 import { ApplicationDialog } from "@/components/application-dialog"
 import { useState } from "react"
-
-// Mock Data (Ideally this would come from a shared store or API)
-const MOCK_PROJECTS = [
-    {
-        id: 1,
-        title: "AI Study Buddy",
-        description: "An intelligent study companion that helps students organize their schedule and summarizes lecture notes.",
-        tags: ["AI", "React", "Python"],
-        members: 3,
-        repo: "github.com/casper/ai-study-buddy",
-        longDescription: "This project aims to leverage Large Language Models to create a personalized study assistant. It features automatic summarization of lecture recordings, flashcard generation, and a smart scheduling system that adapts to the student's learning pace."
-    },
-    {
-        id: 2,
-        title: "Campus Marketplace",
-        description: "A platform for students to buy and sell textbooks, furniture, and electronics securely within the university.",
-        tags: ["Web", "Next.js", "Stripe"],
-        members: 5,
-        repo: "github.com/casper/campus-marketplace",
-        longDescription: "A secure, student-only marketplace that verifies university credentials. Features include integrated payments via Stripe, in-app messaging, and a reputation system to ensure safe transactions."
-    },
-    // ... add other projects if needed for consistency
-]
+import { MOCK_PROJECTS } from "@/lib/data/mock-projects"
 
 export default function ProjectDetailsPage() {
     const params = useParams()
@@ -42,7 +20,8 @@ export default function ProjectDetailsPage() {
         longDescription: "",
         tags: [],
         members: 0,
-        repo: "#"
+        repo: "#",
+        tasks: []
     }
 
     const { hasApplied } = useApplications()
@@ -71,12 +50,20 @@ export default function ProjectDetailsPage() {
                             <Github className="mr-2 h-4 w-4" />
                             View Repo
                         </Button>
-                        <Button
-                            disabled={isApplied}
-                            onClick={() => setIsDialogOpen(true)}
-                        >
-                            {isApplied ? "Applied" : "Apply Now"}
-                        </Button>
+                        {project.isMember ? (
+                            <Button asChild>
+                                <Link href={`/projects/${project.id}/workspace`}>
+                                    Open Workspace
+                                </Link>
+                            </Button>
+                        ) : (
+                            <Button
+                                disabled={isApplied}
+                                onClick={() => setIsDialogOpen(true)}
+                            >
+                                {isApplied ? "Applied" : "Apply Now"}
+                            </Button>
+                        )}
                     </div>
                 </div>
             </div>
@@ -136,6 +123,39 @@ export default function ProjectDetailsPage() {
                             )}
                         </div>
                     </div>
+
+                    {project.tasks && project.tasks.length > 0 && (
+                        <div className="p-6 border rounded-xl bg-card shadow-sm">
+                            <h3 className="font-semibold mb-4 flex items-center">
+                                <CheckCircle2 className="mr-2 h-5 w-5" />
+                                Current Tasks
+                            </h3>
+                            <div className="space-y-3">
+                                {project.tasks.map(task => (
+                                    <div key={task.id} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+                                        {task.status === "Done" ? (
+                                            <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                                        ) : task.status === "In Progress" ? (
+                                            <Clock className="h-4 w-4 text-blue-500 mt-0.5" />
+                                        ) : (
+                                            <Circle className="h-4 w-4 text-muted-foreground mt-0.5" />
+                                        )}
+                                        <div className="flex-1 space-y-1">
+                                            <p className="text-sm font-medium leading-none">{task.title}</p>
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs text-muted-foreground">{task.status}</span>
+                                                {task.assignee && (
+                                                    <span className="text-xs text-muted-foreground bg-background px-1.5 py-0.5 rounded border">
+                                                        {task.assignee.split(" ").map(n => n[0]).join("")}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     <div className="p-6 border rounded-xl bg-card shadow-sm">
                         <h3 className="font-semibold mb-4 flex items-center">
