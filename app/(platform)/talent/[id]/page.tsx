@@ -192,12 +192,15 @@ export default function TalentProfilePage() {
 
                         <TabsContent value="portfolio" className="mt-4">
                             {profile.portfolio && profile.portfolio.length > 0 ? (
-                                <PortfolioGrid items={profile.portfolio} />
+                                <PortfolioGrid items={profile.portfolio} isEditable={profile.isUser} />
                             ) : (
                                 <div className="text-center py-20 bg-muted/30 rounded-xl border border-dashed">
                                     <Code className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
                                     <h3 className="text-lg font-semibold">No portfolio items yet</h3>
-                                    <p className="text-muted-foreground">This user hasn't uploaded any work samples.</p>
+                                    <p className="text-muted-foreground mb-4">This user hasn't uploaded any work samples.</p>
+                                    {profile.isUser && (
+                                        <PortfolioGrid items={[]} isEditable={true} />
+                                    )}
                                 </div>
                             )}
                         </TabsContent>
