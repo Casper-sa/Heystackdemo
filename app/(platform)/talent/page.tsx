@@ -8,64 +8,21 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Search, MapPin, GraduationCap } from "lucide-react"
 import { useUser } from "@/components/user-provider"
-
-// Mock Data
-const MOCK_TALENT = [
-    {
-        id: 1,
-        name: "Alice Smith",
-        major: "Computer Science",
-        location: "Stockholm, Sweden",
-        skills: ["React", "TypeScript", "Node.js"]
-    },
-    {
-        id: 2,
-        name: "Bob Jones",
-        major: "Interaction Design",
-        location: "Kista, Sweden",
-        skills: ["Figma", "UI/UX", "Prototyping"]
-    },
-    {
-        id: 3,
-        name: "Charlie Brown",
-        major: "Electrical Engineering",
-        location: "Stockholm, Sweden",
-        skills: ["IoT", "Embedded C", "PCB Design"]
-    },
-    {
-        id: 4,
-        name: "Diana Prince",
-        major: "Business Administration",
-        location: "Solna, Sweden",
-        skills: ["Marketing", "Strategy", "Public Speaking"]
-    },
-    {
-        id: 5,
-        name: "Evan Wright",
-        major: "Data Science",
-        location: "Stockholm, Sweden",
-        skills: ["Python", "Machine Learning", "SQL"]
-    },
-    {
-        id: 6,
-        name: "Fiona Green",
-        major: "Architecture",
-        location: "Stockholm, Sweden",
-        skills: ["3D Modeling", "AutoCAD", "Rendering"]
-    }
-]
+import { MOCK_TALENT, TalentProfile } from "@/lib/data/mock-talent"
+import Link from "next/link"
 
 export default function BrowseTalentPage() {
     const [searchQuery, setSearchQuery] = useState("")
     const [selectedSkills, setSelectedSkills] = useState<string[]>([])
     const { user } = useUser()
 
-    const userCard = {
+    const userCard: TalentProfile = {
         id: 0,
         name: user.name,
         major: "Computer Science", // Default for now
         location: "Stockholm, Sweden", // Default for now
         skills: user.skills.split(",").map(s => s.trim()).filter(Boolean),
+        bio: user.bio,
         isUser: true
     }
 
@@ -145,7 +102,7 @@ export default function BrowseTalentPage() {
                 {/* Content */}
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {filteredTalent.map((student) => (
-                        <ShadowGlassCard key={student.id} className="hover:shadow-lg transition-shadow relative overflow-hidden">
+                        <ShadowGlassCard key={student.id} className="hover:shadow-lg transition-shadow relative overflow-hidden flex flex-col">
                             {/* @ts-ignore */}
                             {student.isUser && (
                                 <div className="absolute top-0 right-0 p-2">
@@ -163,25 +120,30 @@ export default function BrowseTalentPage() {
                                     </div>
                                 </div>
                             </CardHeader>
-                            <CardContent>
-                                <div className="space-y-4">
+                            <CardContent className="flex-1 flex flex-col">
+                                <div className="space-y-4 flex-1 flex flex-col">
                                     <div className="flex items-center gap-1 text-sm text-muted-foreground">
                                         <MapPin className="h-3 w-3" />
                                         {student.location}
                                     </div>
 
-                                    <div className="space-y-2">
+                                    <div className="space-y-2 flex-1">
                                         <p className="text-sm font-medium">Skills</p>
                                         <div className="flex flex-wrap gap-2">
-                                            {student.skills.map(skill => (
+                                            {student.skills.slice(0, 5).map(skill => (
                                                 <Badge key={skill} variant="secondary">{skill}</Badge>
                                             ))}
+                                            {student.skills.length > 5 && (
+                                                <Badge variant="secondary">+{student.skills.length - 5}</Badge>
+                                            )}
                                         </div>
                                     </div>
 
-                                    <Button variant="outline" size="sm" className="w-full btn-accent-custom border-0">
-                                        View Profile
-                                    </Button>
+                                    <Link href={`/talent/${student.id}`} className="w-full">
+                                        <Button variant="outline" size="sm" className="w-full btn-accent-custom border-0">
+                                            View Profile
+                                        </Button>
+                                    </Link>
                                 </div>
                             </CardContent>
                         </ShadowGlassCard>
