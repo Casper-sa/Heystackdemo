@@ -14,6 +14,7 @@ export interface Application {
 interface ApplicationContextType {
     applications: Application[]
     applyToProject: (projectId: number, projectTitle: string, coverLetter: string) => void
+    updateApplicationStatus: (id: string, status: Application["status"]) => void
     hasApplied: (projectId: number) => boolean
 }
 
@@ -57,6 +58,14 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
         // alert(`Applied to ${projectTitle}!`) 
     }
 
+    const updateApplicationStatus = (id: string, status: Application["status"]) => {
+        setApplications((prev) => {
+            const updated = prev.map((app) => (app.id === id ? { ...app, status } : app))
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
+            return updated
+        })
+    }
+
     const hasApplied = (projectId: number) => {
         return applications.some((app) => app.projectId === projectId)
     }
@@ -66,7 +75,7 @@ export function ApplicationProvider({ children }: { children: React.ReactNode })
     }
 
     return (
-        <ApplicationContext.Provider value={{ applications, applyToProject, hasApplied }}>
+        <ApplicationContext.Provider value={{ applications, applyToProject, hasApplied, updateApplicationStatus }}>
             {children}
         </ApplicationContext.Provider>
     )
