@@ -50,9 +50,9 @@ const ProjectStatusWidget = () => {
     };
 
     return (
-        <div className="h-full flex flex-col gap-2 p-1 overflow-auto custom-scrollbar">
+        <div className="h-full grid grid-cols-1 @md:grid-cols-2 gap-2 p-1 overflow-auto custom-scrollbar content-start">
             {pinnedTasks.length === 0 ? (
-                <div className="flex items-center justify-center h-full text-muted-foreground text-sm text-center p-4">
+                <div className="flex items-center justify-center h-full text-muted-foreground text-sm text-center p-4 col-span-full">
                     No tasks pinned. Go to a project page to add tasks.
                 </div>
             ) : (

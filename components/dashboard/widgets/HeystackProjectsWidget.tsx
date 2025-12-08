@@ -12,7 +12,7 @@ const HeystackProjectsWidget = () => {
     const { projects } = useProjects();
 
     return (
-        <div className="flex flex-col gap-4 h-full overflow-auto p-1 custom-scrollbar">
+        <div className="grid grid-cols-1 @md:grid-cols-2 @lg:grid-cols-3 gap-4 h-full overflow-auto p-1 custom-scrollbar content-start">
             {projects.filter(p => p.isMember).map((project) => {
                 const activeTasks = project.tasks?.filter(t => t.status !== "Done").length || 0;
 

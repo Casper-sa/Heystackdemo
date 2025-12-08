@@ -121,7 +121,7 @@ const Widget = forwardRef<HTMLDivElement, WidgetProps>(({
             onMouseUp={onMouseUp}
             onTouchEnd={onTouchEnd}
             className={cn(
-                "h-full flex flex-col relative overflow-hidden transition-all duration-300 rounded-xl",
+                "h-full flex flex-col relative overflow-hidden transition-all duration-300 rounded-xl @container",
                 // Light Mode (Cloud Vibe)
                 "bg-white/40 backdrop-blur-xl border border-white/20 shadow-sm hover:shadow-md hover:bg-white/50",
                 // Dark Mode (Space Vibe)
